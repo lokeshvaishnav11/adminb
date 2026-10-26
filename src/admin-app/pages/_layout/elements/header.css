@@ -1,0 +1,43 @@
+/* Header / drawer — scoped to avoid changing dashboard or other pages */
+:root { --bet63-theme: #123a7c; --bet63-theme-hover: #1b4c93; }
+.bet63-header { position: relative;font-family: Poppins, Arial, sans-serif; }
+.bet63-header *, .bet63-header *::before, .bet63-header *::after { box-sizing: border-box; }
+.bet63-topbar { height: 58px; min-height: 58px; padding: 0 16px; background: #123a7c !important; display: flex; align-items: center; justify-content: space-between; color: white !important; }
+.bet63-topbar-spacer { flex: 1; }
+.bet63-hamburger { width: 38px; height: 38px; padding: 7px 5px; background: transparent; border: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-around; cursor: pointer; flex-shrink: 0; }
+.bet63-hamburger span { width: 27px; height: 3px; background: #fff; border-radius: 2px; display: block; }
+.bet63-topbar .user-searchh { display: flex; align-items: center; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.bet63-topbar .username { position: relative; margin: 0 !important; }
+.bet63-user-trigger { display: flex; align-items: center; gap: 8px; min-height: 37px; padding: 7px 12px; border: 1px solid rgba(255,255,255,.7); border-radius: 7px; color: #fff !important; background: #123a7c !important; cursor: pointer; font-size: 14px; font-weight: 500; }
+.bet63-user-dropdown { position: absolute; top: calc(100% + 7px); right: 0; min-width: 175px; padding: 6px 0 !important; margin: 0; list-style: none; background: #fff !important; border: 1px solid #e0e5ee; border-radius: 8px; box-shadow: 0 8px 25px #0002; z-index: 120; }
+.bet63-user-dropdown li { padding: 0 !important; margin: 0 !important; border: 0 !important; }
+.bet63-user-dropdown a { display: flex; align-items: center; gap: 9px; padding: 10px 14px; color: #202838 !important; text-decoration: none; font-size: 13px; }
+.bet63-user-dropdown a:hover { background: #eef3fc; }
+.bet63-user-dropdown b { font-size: 13px; font-weight: 500; }
+.bet63-user-dropdown svg { width: 18px; height: 18px; }
+.bet63-sidebar-backdrop { position: fixed; inset: 0; z-index: 1000; width: 100vw; height: 100vh; border: 0; padding: 0; background: rgba(0,0,0,.42); cursor: pointer; }
+#sidebar.bet63-sidebar { position: fixed !important; top: 0 !important; left: 0 !important; bottom: 0 !important; z-index: 1001 !important; display: block !important; width: min(290px, 84vw) !important; max-width: 84vw !important; height: 100dvh !important; overflow-x: hidden !important; overflow-y: auto !important; background: #123a7c !important; color: #fff !important; transform: translateX(-105%); transition: transform .24s ease; box-shadow: 5px 0 22px #0002; overscroll-behavior: contain; }
+#sidebar.bet63-sidebar.bet63-sidebar-open { transform: translateX(0); }
+.bet63-sidebar-head { display: flex; align-items: center; justify-content: space-between; height: 54px; padding: 0 17px 0 22px; border-bottom: 1px solid #ffffff24; }
+.bet63-sidebar-title { font-size: 15px; font-weight: 700; letter-spacing: .8px; }
+.bet63-sidebar-close { width: 35px; height: 35px; display: grid; place-items: center; border: 0; border-radius: 6px; background: transparent; color: #fff; cursor: pointer; }
+.bet63-sidebar-close svg { width: 22px; height: 22px; }
+.bet63-sidebar-close:hover { background: #ffffff1b; }
+#sidebar.bet63-sidebar .bet63-sidebar-logo { display: flex; justify-content: center; align-items: center; min-height: 72px; padding: 9px 12px; background: #123a7c !important; }
+#sidebar.bet63-sidebar .bet63-sidebar-logo img { display: block; max-height: 53px; max-width: 130px; width: auto; object-fit: contain; }
+#sidebar.bet63-sidebar .navbar, #sidebar.bet63-sidebar .navbar-collapse, #sidebar.bet63-sidebar .navbar-nav { display: block !important; width: 100% !important; min-width: 0 !important; padding: 0 !important; margin: 0 !important; background: transparent !important; }
+#sidebar.bet63-sidebar .nav-item { display: block !important; width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; border: 0 !important; list-style: none; background: transparent; }
+#sidebar.bet63-sidebar .nav-item > a { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: flex-start !important; gap: 15px !important; width: 100% !important; min-height: 54px; padding: 13px 19px !important; margin: 0 !important; border: 0 !important; color: #fff !important; text-decoration: none !important; background: transparent !important; cursor: pointer; text-align: left !important; }
+#sidebar.bet63-sidebar .nav-item > a > svg { width: 21px !important; height: 21px !important; font-size: 21px !important; flex-shrink: 0; color: #fff !important; }
+#sidebar.bet63-sidebar .nav-item > a > b { display: block; flex: 1; color: #fff !important; font-size: 14px !important; font-weight: 500 !important; line-height: 1.35; white-space: normal; text-align: left !important; }
+#sidebar.bet63-sidebar .nav-item > a > .fa-caret-down { margin-left: auto; font-size: 14px; color: #fff !important; }
+#sidebar.bet63-sidebar .nav-item > a:hover, #sidebar.bet63-sidebar .nav-item.bg-active > a { background: #1b4c93 !important; }
+#sidebar.bet63-sidebar .dropdown-menuj, #sidebar.bet63-sidebar .dropdown-menuf, #sidebar.bet63-sidebar .dropdown-menud, #sidebar.bet63-sidebar .dropdown-menum { display: block !important; position: static !important; width: 100% !important; padding: 5px 0 8px 13px !important; margin: 0 !important; background: #0e306a !important; border: 0 !important; box-shadow: none !important; }
+#sidebar.bet63-sidebar .dropdown-menuj li, #sidebar.bet63-sidebar .dropdown-menuf li, #sidebar.bet63-sidebar .dropdown-menud li, #sidebar.bet63-sidebar .dropdown-menum li { display: block; margin: 0 !important; padding: 0 !important; border: 0 !important; list-style: none; }
+#sidebar.bet63-sidebar .dropdown-item { display: flex !important; flex-direction: row !important; align-items: center !important; width: 100% !important; min-height: 43px; padding: 10px 12px !important; background: transparent !important; text-decoration: none !important; }
+#sidebar.bet63-sidebar .dropdown-item:hover, #sidebar.bet63-sidebar .dropdown-item.bg-active { background: #1b4c93 !important; }
+#sidebar.bet63-sidebar .dropdown-item b { display: flex !important; flex-direction: row !important; align-items: center !important; gap: 10px; width: auto !important; color: #fff !important; font-size: 13px !important; font-weight: 400 !important; line-height: 1.35; text-align: left !important; }
+#sidebar.bet63-sidebar .dropdown-item svg { width: 17px !important; height: 17px !important; color: #fff !important; flex-shrink: 0; }
+#sidebar.bet63-sidebar .mobile-style { width: auto !important; text-align: left !important; }
+@media (max-width: 600px) { .bet63-topbar { height: 55px; min-height: 55px; padding: 0 12px; } .bet63-user-trigger { font-size: 13px; padding: 7px 10px; } #sidebar.bet63-sidebar { width: min(280px, 84vw) !important; } }
+@media (prefers-reduced-motion: reduce) { #sidebar.bet63-sidebar { transition: none; } }

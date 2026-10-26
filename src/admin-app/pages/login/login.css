@@ -1,0 +1,383 @@
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+.bh-login-page {
+  --bh-blue: #173c79;
+  --bh-pink: #d50060;
+  --bh-border: #f00073;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bh-blue);
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* HERO BACKGROUND */
+
+
+.bh-hero {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 52%;
+  min-height: 500px;
+  background-image: url("https://bethub24pro.com/login-bg.a3aaee6451241762.png");
+  background-position: center top;
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+
+/* MAIN LOGIN PANEL */
+
+.bh-card {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  width: calc(100% - 84px);
+  max-width: 1000px;
+  min-height: 800px;
+  margin: clamp(360px, 33.5vh, 590px) auto 0;
+  padding: 78px 44px 80px;
+  border-top: 6px solid var(--bh-border);
+  border-radius: 90px 90px 0 0;
+  background: var(--bh-blue);
+}
+
+/* CIRCULAR LOGO */
+
+.bh-badge {
+  position: absolute;
+  right: 38px;
+  top: -67px;
+  width: 164px;
+  height: 164px;
+  padding: 6px;
+  border: 4px solid var(--bh-border);
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.bh-badge-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--bh-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-login {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* TITLE */
+
+.bh-title {
+  margin: 0 0 29px;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  color: #fff;
+  letter-spacing: -1px;
+}
+
+/* FORM */
+
+.bh-form {
+  width: 100%;
+}
+
+.bh-input-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.bh-input {
+  display: block;
+  width: 100%;
+  height: 86px;
+  padding: 0 28px;
+  border: 2px solid var(--bh-border);
+  border-radius: 44px;
+  outline: none;
+  background: #fff;
+  color: #202020;
+  font-size: 31px;
+  font-weight: 400;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.bh-input::placeholder {
+  color: #aeb6bf;
+  opacity: 1;
+}
+
+.bh-input:focus {
+  border-color: #ff258b;
+  box-shadow: 0 0 0 3px rgba(255, 37, 139, 0.15);
+}
+
+/* PASSWORD TOGGLE */
+
+.bh-eye {
+  position: absolute;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  padding: 8px;
+  background: transparent;
+  color: #9ca5b1;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* LOGIN BUTTON */
+
+.bh-btn-group {
+  width: 100%;
+  margin-top: 46px;
+}
+
+.bh-btn-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 86px;
+  border: 0;
+  border-radius: 46px;
+  background: var(--bh-pink);
+  color: #080808;
+  font-size: 37px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.bh-btn-login:hover:not(:disabled) {
+  background: #e3006c;
+}
+
+.bh-btn-login:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.bh-btn-login:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+/* LOGIN SUCCESS POPUP */
+
+.bh-success-popup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 62px;
+  margin-top: 20px;
+  padding: 12px 18px;
+  border: 1px solid #33d788;
+  border-radius: 14px;
+  background: #0d754a;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 600;
+  animation: bh-popup-in 0.25s ease-out;
+}
+
+.bh-success-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #fff;
+  color: #0d754a;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+@keyframes bh-popup-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ERROR */
+
+.bh-error {
+  padding: 12px 18px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  background: #fff0f0;
+  color: #b00020;
+  font-size: 16px;
+}
+
+/* FOOTER */
+
+.bh-footer {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: 72px;
+  padding: 14px 20px;
+  background: #153466;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bh-powered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: #fff;
+  font-size: 23px;
+  font-weight: 400;
+}
+
+.bh-powered img {
+  display: block;
+  width: 170px;
+  max-height: 40px;
+  object-fit: contain;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+  .bh-card {
+    width: calc(100% - 84px);
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .bh-hero {
+    height: 52%;
+    min-height: 320px;
+  }
+
+  .bh-card {
+    width: calc(100% - 32px);
+    min-height: 580px;
+    margin-top: clamp(250px, 34vh, 400px);
+    padding: 58px 22px 65px;
+    border-top-width: 4px;
+    border-radius: 48px 48px 0 0;
+  }
+
+  .bh-badge {
+    width: 108px;
+    height: 108px;
+    right: 18px;
+    top: -48px;
+    border-width: 3px;
+    padding: 4px;
+  }
+
+  .bh-title {
+    font-size: 32px;
+    margin-bottom: 15px;
+  }
+
+  .bh-input-wrap {
+    margin-bottom: 20px;
+  }
+
+  .bh-input {
+    height: 60px;
+    padding: 0 20px;
+    border-radius: 32px;
+    font-size: 20px;
+  }
+
+  .bh-eye {
+    right: 15px;
+    font-size: 18px;
+  }
+
+  .bh-btn-group {
+    margin-top: 28px;
+  }
+
+  .bh-btn-login {
+    height: 62px;
+    border-radius: 35px;
+    font-size: 25px;
+  }
+
+  .bh-success-popup {
+    font-size: 16px;
+    min-height: 54px;
+  }
+
+  .bh-footer {
+    min-height: 62px;
+  }
+
+  .bh-powered {
+    gap: 12px;
+    font-size: 16px;
+  }
+
+  .bh-powered img {
+    width: 125px;
+  }
+}
+
+@media (max-width: 360px) {
+  .bh-card {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .bh-badge {
+    width: 92px;
+    height: 92px;
+  }
+
+  .bh-title {
+    font-size: 28px;
+  }
+}

@@ -1,0 +1,409 @@
+// import React from 'react'
+// import accountService from '../../../services/account.service';
+// import { AxiosResponse } from 'axios';
+// import moment from 'moment';
+
+// const CasinoDetail = () => {
+
+//     const [casinoData, setCasinoData] = React.useState<any>([]);
+//     const [openMatch, setOpenMatch] = React.useState<string | null>(null);
+
+//     const [filteredData, setFilteredData] = React.useState<any>([]);
+//     const [startDate, setStartDate] = React.useState("");
+//     const [endDate, setEndDate] = React.useState("");
+
+//     const handleFilter = () => {
+//         if (!startDate || !endDate) return;
+
+//         const start = moment(startDate).startOf("day");
+//         const end = moment(endDate).endOf("day");
+
+//         const filtered = casinoData.filter((item: any) => {
+//             const betTime = moment(item.betClickTime);
+//             return betTime.isBetween(start, end, undefined, "[]"); // inclusive
+//         });
+
+//         setFilteredData(filtered);
+//     };
+
+//     React.useEffect(() => {
+//         accountService.marketcasino().then((res: AxiosResponse) => {
+//             //console.log(res, "casinoooo data");
+//             const allData = res?.data?.data?.bets?.reverse() || [];
+//             setCasinoData(allData);
+//             setFilteredData(allData); //
+
+//         });
+
+//     }, []);
+
+//     const groupedData = filteredData.reduce((acc: any, bet: any) => {
+//         const key = bet.matchName;
+//         if (!acc[key]) acc[key] = [];
+//         acc[key].push(bet);
+//         return acc;
+//     }, {});
+
+//     const [expandedMatches, setExpandedMatches] = React.useState<{ [key: string]: boolean }>({});
+
+//     return (
+//         <div className=' body-wrap'>
+
+//             <h2 className="ledger-title">Casino Details</h2>
+
+//             <div style={{ fontSize: "12px" }} className="d-flex gap-2 align-items-end mb-3  flex-wrap">
+//                 <div className='me-1'>
+//                     <label className="form-label mb-1 ">Start Date</label>
+//                     <input
+//                         type="date"
+//                         value={startDate}
+//                         className="form-control p-1"
+//                         onChange={(e) => setStartDate(e.target.value)}
+//                     />
+//                 </div>
+//                 <div className='me-1'>
+//                     <label className="form-label mb-1">End Date</label>
+//                     <input
+//                         type="date"
+//                         value={endDate}
+//                         className="form-control p-1"
+//                         onChange={(e) => setEndDate(e.target.value)}
+//                     />
+//                 </div>
+//                 <div>
+//                     <button className="btn btn-primary" onClick={handleFilter}>
+//                         Filter
+//                     </button>
+//                 </div>
+//             </div>
+
+//             <div className="card-content">
+//                 <div className=" coupon-table">
+//                     <div>
+//                         {Object.entries(groupedData).map(([matchName, bets]: [string, any[]], i) => {
+//                             // const totalPnL = bets.reduce((sum, b) => sum + b.profitLoss, 0);
+//                             const totalPnL = bets.reduce((sum, b) => {
+//                                 const pl = typeof b.profitLoss === "object" && b.profitLoss.$numberDecimal
+//                                     ? parseFloat(b.profitLoss.$numberDecimal)
+//                                     : parseFloat(b.profitLoss) || 0;
+//                                 return sum + pl;
+//                             }, 0);
+//                             const isPositive = totalPnL >= 0;
+
+//                             return (
+//                                 <React.Fragment key={i}>
+//                                     <div className='container mt-2 p-0'>
+//                                         <div className='card single-match text-center my-2'>
+//                                             <a
+//                                                 className=""
+//                                                 style={{
+//                                                     cursor: "pointer",
+//                                                     backgroundColor: "#F4EED0",
+//                                                 }}
+//                                                 onClick={() => setOpenMatch(openMatch === matchName ? null : matchName)}
+//                                             >
+//                                                 <h5 className="mb-2 ng-binding" style={{ backgroundColor: "darkgoldenrod" }}>{matchName}</h5>
+
+//                                                 <div className="d-flex p-1 justify-content-between">
+//                                                     <p className="">Start On</p>
+//                                                     <p className="">
+//                                                         {
+//                                                             bets[0]?.betClickTime
+//                                                                 ? moment(bets[0].betClickTime).format("MM/DD/YYYY h:mm:ss")
+//                                                                 : "-"
+//                                                         }
+//                                                     </p>
+//                                                 </div>
+
+//                                                 <div className="d-flex p-1 justify-content-between">
+//                                                     <p className="mb-0">Total PnL:</p>
+//                                                     <p
+//                                                         className={`mb-0 ${isPositive ? "text-danger" : "text-success"
+//                                                             } fw-bold`}
+//                                                     >
+//                                                         {totalPnL?.toFixed(2)}
+//                                                     </p>
+//                                                 </div>
+
+//                                                 {openMatch === matchName && (() => {
+//                                                     // Move this to your component scope (not here inside JSX)
+
+//                                                     const isExpanded = expandedMatches[matchName] || false;
+//                                                     const displayedBets = isExpanded ? bets : bets.slice(0, 20);
+
+//                                                     return (
+//                                                         <div>
+//                                                             <div className="table-responsive" style={{ overflowX: 'scroll' }}>
+//                                                                 <div style={{ minWidth: '750px' }}>
+//                                                                     <table className="table table-sm table-striped table-bordered mb-0 text-nowrap">
+//                                                                         <thead className="table-secondary text-center fs-6">
+//                                                                             <tr>
+//                                                                                 <th className='text-center'>Username</th>
+//                                                                                 <th>Type</th>
+//                                                                                 <th>Rate</th>
+//                                                                                 <th>Amount</th>
+//                                                                                 <th>PnL</th>
+//                                                                                 <th>Status</th>
+//                                                                                 <th>Date/Time</th>
+//                                                                             </tr>
+//                                                                         </thead>
+//                                                                         <tbody>
+//                                                                             {displayedBets.map((b: any, j: number) => (
+//                                                                                 <tr key={j} className="text-center align-middle fs-6">
+//                                                                                     <td>{b?.userName} ({b?.parentNameStr})</td>
+//                                                                                     <td>{b?.selectionName}</td>
+//                                                                                     <td>{b?.odds}</td>
+//                                                                                     <td>{b?.stack}</td>
+//                                                                                     <td className={b?.profitLoss >= 0 ? "text-success" : "text-danger"}>
+//                                                                                         {b?.profitLoss?.$numberDecimal?.toFixed(2)}
+//                                                                                     </td>
+//                                                                                     <td>
+//                                                                                         <span className={`badge rounded-pill text-light ${b?.profitLoss?.$numberDecimal >= 0 ? "bg-success" : "bg-danger"}`}>
+//                                                                                             {b?.profitLoss?.$numberDecimal >= 0 ? "Win" : "Lost"}
+//                                                                                         </span>
+//                                                                                     </td>
+//                                                                                     <td>{moment(b?.betClickTime).format("MM/DD/YYYY h:mm:ss a")}</td>
+//                                                                                 </tr>
+//                                                                             ))}
+//                                                                         </tbody>
+//                                                                     </table>
+//                                                                 </div>
+
+//                                                                 {bets.length > 20 && (
+//                                                                     <div className="text-center mt-2">
+//                                                                         <button
+//                                                                             className="btn btn-sm btn-primary text-light"
+//                                                                             onClick={(e) => {
+//                                                                                 e.stopPropagation(); // prevent closing match on button click
+//                                                                                 setExpandedMatches(prev => ({
+//                                                                                     ...prev,
+//                                                                                     [matchName]: !isExpanded
+//                                                                                 }));
+//                                                                             }}
+//                                                                         >
+//                                                                             {isExpanded ? "View Less" : "View All"}
+//                                                                         </button>
+//                                                                     </div>
+//                                                                 )}
+//                                                             </div>
+
+//                                                         </div>
+//                                                     );
+//                                                 })()}
+
+//                                             </a>
+//                                         </div>
+//                                     </div>
+//                                 </React.Fragment>
+//                             );
+//                         })}
+//                     </div>
+//                 </div>
+//             </div>
+
+//         </div>
+//     )
+// }
+
+// export default CasinoDetail
+
+import React from "react";
+import accountService from "../../../services/account.service";
+import { AxiosResponse } from "axios";
+import moment from "moment-timezone";
+import { useAppSelector } from "../../../redux/hooks";
+import { selectUserData } from "../../../redux/actions/login/loginSlice";
+import { useNavigate, useParams } from "react-router-dom";
+
+const MatkaDetail = () => {
+  const [casinoData, setCasinoData] = React.useState<any>([]);
+  const [openMatch, setOpenMatch] = React.useState<string | null>(null);
+  const [filteredData, setFilteredData] = React.useState<any>([]);
+  const [startDate, setStartDate] = React.useState("");
+  const [endDate, setEndDate] = React.useState("");
+  const [expandedMatches, setExpandedMatches] = React.useState<{
+    [key: string]: boolean;
+  }>({});
+  const userState = useAppSelector(selectUserData);
+  const navigate = useNavigate();
+  const [matkaList, setMatkaList] = React.useState<any>([]);
+
+  React.useEffect(() => {
+    const fetchMatkaList = async () => {
+      try {
+        const res = await accountService.matkagamelist();
+        setMatkaList(res?.data?.data || []);
+      } catch (err) {
+        console.error("Matka list error:", err);
+      }
+    };
+
+    fetchMatkaList();
+  }, []);
+
+  // ✅ Helper function to safely parse Decimal128 or string to number
+  const toNumber = (val: any): number => {
+    if (!val) return 0;
+    if (typeof val === "object" && val.$numberDecimal)
+      return parseFloat(val.$numberDecimal);
+    if (typeof val === "string") return parseFloat(val);
+    return typeof val === "number" ? val : 0;
+  };
+
+  const handleFilter = () => {
+    if (!startDate || !endDate) return;
+
+    const start = moment(startDate).startOf("day");
+    const end = moment(endDate).endOf("day");
+
+    const filtered = casinoData.filter((item: any) => {
+      const betTime = moment(item.betClickTime);
+      return betTime.isBetween(start, end, undefined, "[]"); // inclusive
+    });
+
+    setFilteredData(filtered);
+  };
+
+  React.useEffect(() => {
+    accountService.marketmatkaa().then((res: AxiosResponse) => {
+      //console.log(res, "matkkkaa data");
+      const allData = res?.data?.data?.bets?.reverse() || [];
+      setCasinoData(allData);
+      setFilteredData(allData);
+    });
+  }, []);
+  
+
+  const groupedData = filteredData.reduce((acc: any, bet: any) => {
+    const key = bet.roundid; // ✅ roundid se grouping
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(bet);
+    return acc;
+  }, {});
+
+  return (
+    <div className="body-wrap">
+      <h2 className="ledger-title">Matka Details</h2>
+
+      <div
+        style={{ fontSize: "12px" }}
+        className="d-flexxx d-none gap-2 align-items-end mb-3 flex-wrap"
+      >
+        <div className="me-1">
+          <label className="form-label mb-1">Start Date</label>
+          <input
+            type="date"
+            value={startDate}
+            className="form-control p-1"
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </div>
+        <div className="me-1">
+          <label className="form-label mb-1">End Date</label>
+          <input
+            type="date"
+            value={endDate}
+            className="form-control p-1"
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+        </div>
+        <div>
+          <button className="btn btn-primary" onClick={handleFilter}>
+            Filter
+          </button>
+        </div>
+      </div>
+
+      <div className="card-content">
+        <div className="coupon-table">
+          <div>
+            {/* {Object.entries(groupedData).map(([roundid, bets]: [string, any[]], i) => {
+  const totalBetAmount = bets.reduce(
+    (sum, b) => sum + (Number(b.betamount) || 0),
+    0
+  );
+
+  const betDate = bets[0]?.createdAt
+    ? moment(bets[0].createdAt).format("DD-MMM-YYYY hh:mm A")
+    : "-";
+
+  return (
+    <div
+      key={i}
+      className="card single-match text-center my-2"
+      style={{ cursor: "pointer", backgroundColor: "" }}
+      onClick={() => navigate(`/detail-matka/${roundid}`)}
+    >
+      <h5
+        className="mb-1"
+        style={{ backgroundColor: "#6c757d", color: "#fff" }}
+      >
+        {roundid} [Bets : {bets.length}]
+      </h5>
+
+      <p className="mb-1 py-2">{betDate}</p>
+
+      <div className="d-flexxx d-none justify-content-between px-3 pb-2">
+        <span>Total Bet : {totalBetAmount}</span>
+        <span className="fw-bold text-success">
+          Total PnL : {totalBetAmount}
+        </span>
+      </div>
+    </div>
+  );
+})} */}
+
+            {matkaList.map((game: any, i: number) => {
+              const betCount = casinoData.filter(
+                (bet: any) => bet.roundid === game.roundid
+              ).length;
+
+              const matchDate = game.createdAt
+                ? moment(game.createdAt).format("DD-MMM-YYYY hh:mm A")
+                : "-";
+
+                const openTime = moment()
+                .tz("Asia/Kolkata")
+                .hour(game.opentime.hour)
+                .minute(game.opentime.minute)
+                .second(0)
+                .format("DD-MM-YYYY hh:mm A");
+            
+              const closeTime = moment()
+                .tz("Asia/Kolkata")
+                .add(game.gamename === "Disawar" ? 1 : 0, "day")
+                .hour(game.closetime.hour)
+                .minute(game.closetime.minute)
+                .second(0)
+                .format("DD-MM-YYYY hh:mm A");
+
+              return (
+                <div
+                  key={i}
+                  className="card single-match text-center my-2"
+                  style={{ cursor: "pointer" }}
+                  onClick={() =>
+                    navigate(`/admin/detail-matka/${game.roundid}`)
+                  }
+                >
+                  <h5
+                    className="mb-1"
+                    style={{ backgroundColor: "#6c757d", color: "#fff" }}
+                  >
+                    {game.roundid} [Bets : {betCount}]
+                  </h5>
+
+                  <p className="mb-1 py-2">
+                  {openTime}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MatkaDetail;

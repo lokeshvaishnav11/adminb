@@ -1,0 +1,346 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
+.bet63-dashboard {
+  --bet63-font: "Poppins", sans-serif;
+
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f6fb;
+  color: #252525;
+  font-family: var(--bet63-font);
+  overflow-x: hidden;
+}
+
+.bet63-dashboard *,
+.bet63-dashboard *::before,
+.bet63-dashboard *::after {
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.bet63-content {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 8px 3px 50px;
+}
+
+/* NOTICE */
+
+.bet63-notice {
+  width: 100%;
+  min-height: 46px;
+  padding: 8px 12px;
+  margin-bottom: 2px;
+
+  background: #d00060;
+  border-radius: 9px;
+  color: #fff;
+
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* ACCOUNT */
+
+.bet63-balance-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  min-height: 64px;
+  padding: 10px 22px;
+
+  background: linear-gradient(100deg, #008300, #00b900);
+  border: 2px solid #c6c6c6;
+  border-radius: 12px;
+
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.bet63-balance-card strong {
+  min-width: 0;
+  text-align: right;
+  font-size: 19px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* SHARE / COMMISSION */
+
+.bet63-stats-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.bet63-stat {
+  min-width: 0;
+  min-height: 65px;
+  padding: 10px 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  border: 2px solid #c6c6c6;
+  border-radius: 12px;
+
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.bet63-stat strong {
+  font-size: 17px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.bet63-yellow {
+  background: #f9ff00;
+  color: #222;
+}
+
+.bet63-stat-blue {
+  background: linear-gradient(110deg, #0875ff, #328bff);
+  color: #fff;
+}
+
+/* ROLE CARDS */
+
+.bet63-role-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.bet63-role-card {
+  min-width: 0;
+  min-height: 90px;
+  padding: 10px 18px;
+
+  border: 2px solid #c6c6c6;
+  border-radius: 12px;
+
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 7px;
+
+  cursor: pointer;
+}
+
+.bet63-role-card strong {
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.bet63-agent {
+  background: #f9ff00;
+  color: #111;
+}
+
+.bet63-client,
+.bet63-role-dark {
+  background: #343a40;
+  color: #fff;
+}
+
+.bet63-role-count {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bet63-count-white {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+
+  background: #e9edf3;
+  border-radius: 50%;
+
+  color: #111;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+/* DASHBOARD ICONS */
+
+.bet63-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 20px;
+  row-gap: 30px;
+
+  margin-top: 32px;
+  padding-bottom: 60px;
+}
+
+.bet63-icon-item {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 9px;
+
+  color: #252525;
+  cursor: pointer;
+}
+
+.bet63-icon-circle {
+  width: 80px;
+  height: 80px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #fff;
+  transition: transform 0.2s ease;
+}
+
+.bet63-icon-item:hover .bet63-icon-circle {
+  transform: scale(1.04);
+}
+
+.bet63-icon-item:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.bet63-green {
+  background: linear-gradient(135deg, #00b400, #008000);
+}
+
+.bet63-cyan {
+  background: linear-gradient(135deg, #00e3ef, #00bed7);
+}
+
+.bet63-red {
+  background: linear-gradient(135deg, #ff0010, #e80000);
+}
+
+.bet63-blue {
+  background: linear-gradient(135deg, #368cff, #1974ff);
+}
+
+.bet63-icon-label {
+  font-size: 16px;
+  line-height: 1.35;
+  font-weight: 400;
+  text-align: center;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .bet63-content {
+    padding: 8px 3px 40px;
+  }
+
+  .bet63-notice {
+    font-size: 13px;
+    min-height: 42px;
+  }
+
+  .bet63-balance-card {
+    min-height: 62px;
+    padding: 10px 16px;
+    font-size: 17px;
+  }
+
+  .bet63-balance-card strong {
+    font-size: 16px;
+  }
+
+  .bet63-stats-grid {
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .bet63-stat {
+    min-height: 64px;
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+
+  .bet63-stat strong {
+    font-size: 15px;
+  }
+
+  .bet63-role-grid {
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .bet63-role-card {
+    min-height: 88px;
+    padding: 10px 14px;
+  }
+
+  .bet63-role-card strong {
+    font-size: 16px;
+  }
+
+  .bet63-icon-grid {
+    row-gap: 28px;
+  }
+
+  .bet63-icon-circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .bet63-icon-circle svg {
+    width: 47px;
+    height: 47px;
+  }
+
+  .bet63-icon-label {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 380px) {
+  .bet63-stat,
+  .bet63-stat strong {
+    font-size: 13px;
+  }
+
+  .bet63-role-card strong {
+    font-size: 14px;
+  }
+
+  .bet63-icon-circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .bet63-icon-label {
+    font-size: 18px;
+  }
+}
