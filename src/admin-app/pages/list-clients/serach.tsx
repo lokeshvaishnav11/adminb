@@ -21,7 +21,7 @@ interface UserResponse {
 }
 
 // const API_URL = "http://localhost:3010/api";
-const API_URL = "https://api.a2zlive.shop/api";
+const API_URL = "https://api.betx99.co/api";
 
 
 const UserSearch: React.FC = () => {

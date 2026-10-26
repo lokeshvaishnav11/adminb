@@ -11,7 +11,7 @@ const Footer = () => {
               Terms & Conditions
             </a> */}
             <h4 ng-if="!virtualGame" style={{color:"#000000",fontFamily:"Verdana, Geneva, sans-serif", fontSize:"12px",fontWeight:"bold"}} className="ng-binding ng-scope">Copy
-			Right @ a2zlive.shop</h4>
+			Right @ betx99.co</h4>
           </p>
 
         </div>
