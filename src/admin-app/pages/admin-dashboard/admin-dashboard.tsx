@@ -120,7 +120,7 @@ const AdminDashboard: React.FC = () => {
     <div className="bet63-dashboard">
       <main className="bet63-content">
         {!activeSection && (<>
-        <div className="bet63-notice">Please Maintain Your Account Otherwise Apka Panel Inactive Ho Jayega Thanks</div>
+        {/* <div className="bet63-notice">Please Maintain Your Account Otherwise Apka Panel Inactive Ho Jayega Thanks</div> */}
         <div className="bet63-balance-card">
           <span>My Account</span>
           <strong>₹ {formatMoney(detail?.balance?.balance)}</strong>
