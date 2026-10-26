@@ -1629,19 +1629,19 @@ const ListClients = () => {
                                 href={`https://wa.me/?text=${encodeURIComponent(
                                   user.username?.startsWith("C")
                                     ? `Login Details:
-Username: ${user.code || "N/A"}
+Username: ${user.username || "N/A"}
 Password: ${user.password}
 Amount: ${mainBalanceUser(user).toFixed(2)}
 
-Name: ${user.username || "N/A"}
+Name: ${user.code || "N/A"}
 
 Client Link: https://betx99.co`
                                     : `Login Details:
-Username: ${user.code || "N/A"}
+Username: ${user.username || "N/A"}
 Password: ${user.password}
 Amount: ${mainBalanceUser(user).toFixed(2)}
 
-Name: ${user.username || "N/A"}
+Name: ${user.code || "N/A"}
 
 Admin Link: https://admin.betx99.co/
 Client Link: https://betx99.co`
