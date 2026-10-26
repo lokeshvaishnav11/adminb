@@ -566,7 +566,7 @@ useEffect(() => {
         <div className="bh-badge">
           <div className="bh-badge-inner">
             <img
-              src="/imgs/logoN.jpeg"
+              src="https://betx99.co/imgs/logobet2.png"
               alt="Admin Logo"
               className="logo-login"
             />

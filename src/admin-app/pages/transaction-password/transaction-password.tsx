@@ -108,7 +108,7 @@ const TransactionPassword = () => {
               <div className='loginInner1'>
                 <div className='log-logo m-b-20 text-center'>
                   {/* <img src='/imgs/logo.png' className='logo-login' /> */}
-                  A2Z
+                  betx99
                 </div>
                 <div className='featured-box-login featured-box-secundary default'>
                   <h4 className='text-center'>Set your own Password</h4>
