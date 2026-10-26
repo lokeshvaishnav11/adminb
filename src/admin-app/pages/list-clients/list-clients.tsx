@@ -211,11 +211,11 @@ const ListClients = () => {
       type: newtype || "",
       page: 1
     };
-  
+
     setSearchObj(obj);
     setPage(1);
     getList(obj);
-  }, [username, searchParams.get("search"), callbacklist,newtype]);
+  }, [username, searchParams.get("search"), callbacklist, newtype]);
 
   React.useEffect(() => {
     clientlistdata(users);
@@ -223,15 +223,15 @@ const ListClients = () => {
 
   const handlePageClick = (event: any) => {
     const selectedPage = event.selected + 1;
-  
+
     setPage(selectedPage);
-  
+
     const updatedObj = {
       ...searchObj,
       type: newtype || "", // 🔥 ensure type always goes
       page: selectedPage
     };
-  
+
     getList(updatedObj);
   };
 
@@ -269,9 +269,9 @@ const ListClients = () => {
     status?: string;
     page?: number;
   }) => {
-  
+
     setUserList([] as any);
-  
+
     userService.getUserList(obj).then((res: AxiosResponse<any>) => {
       setSearchObj(obj); // store latest filters including type
       setUserList(res.data.data);
@@ -504,27 +504,27 @@ const ListClients = () => {
   );
 
   const mainBalance = (row: any) => {
-  const clientpl = row.balance?.profitLoss || 0;
-  const creditRef = row?.balance?.balance || 0;
+    const clientpl = row.balance?.profitLoss || 0;
+    const creditRef = row?.balance?.balance || 0;
 
-  const value = parseFloat(creditRef);
-  return Math.max(0, value);
-};
+    const value = parseFloat(creditRef);
+    return Math.max(0, value);
+  };
 
   const mainBalanceUser = (row: any) => {
-  const clientpl = row.balance?.profitLoss || 0;
-  const creditRef: any = row?.balance?.balance - row?.balance?.exposer;
+    const clientpl = row.balance?.profitLoss || 0;
+    const creditRef: any = row?.balance?.balance - row?.balance?.exposer;
 
-  const value = parseFloat(creditRef);
-  return Math.max(0, value);
-};
+    const value = parseFloat(creditRef);
+    return Math.max(0, value);
+  };
 
   const mainBalancechild = (row: any) => {
     const creditRef = row?.creditRefrences || 0;
     // const clientpl = row.balance?.profitLoss || 0;
     const creditb = row?.balance?.balance || 0;
     const profitloss = row?.balance?.profitLoss || 0;
-   const value = parseFloat(row.childBalance);
+    const value = parseFloat(row.childBalance);
     return Math.max(0, value);
     // return (parseFloat(creditRef) + parseFloat(profitloss) - +parseFloat(creditb))?.toFixed(2);
     // return parseFloat(row.childBalance);
@@ -931,14 +931,14 @@ const ListClients = () => {
                         {newtype == "sadmin"
                           ? "Sub Admin"
                           : newtype == "suadmin"
-                          ? "Admin"
-                          : newtype == "smdl"
-                          ? "Master Agent"
-                          : newtype == "mdl"
-                          ? "Super Agent Master"
-                          : newtype == "dl"
-                          ? "Agent Master"
-                          : "Client"}
+                            ? "Admin"
+                            : newtype == "smdl"
+                              ? "Master Agent"
+                              : newtype == "mdl"
+                                ? "Super Agent Master"
+                                : newtype == "dl"
+                                  ? "Agent Master"
+                                  : "Client"}
                       </p>
 
                       {username ? (
@@ -1051,7 +1051,7 @@ const ListClients = () => {
                         {" "}
                         Balance{" "}
                       </th>
-                     {userState.user.comm && <th
+                      {userState.user.comm && <th
                         colSpan={3}
                         className="text-center navbar-bet99 text-dark"
                         rowSpan={1}
@@ -1070,7 +1070,7 @@ const ListClients = () => {
 
                       <th className="noExport text-center">U St</th>
                       {/* <th className="noExport">B St</th> */}
-                      {/* <th></th> */}
+                      <th></th>
                       <th className="text-center">Name</th>
                       <th className="text-center">User</th>
                       <th className="text-center">Mobile</th>
@@ -1090,10 +1090,10 @@ const ListClients = () => {
                       {/* <th>Available Balance</th> */}
 
                       {/* <th>Engaged</th> */}
-                     {userState?.user?.comm && <> <th className="text-center">Match %</th>
-                     <th className="text-center">Casino %</th>
-                      <th className="text-center">Session %</th>
-                      <th className="text-center">Matka %</th> </>}
+                      {userState?.user?.comm && <> <th className="text-center">Match %</th>
+                        <th className="text-center">Casino %</th>
+                        <th className="text-center">Session %</th>
+                        <th className="text-center">Matka %</th> </>}
 
                       {/* <th>Account Type</th> */}
                       {/* <th className="noExport">Actions</th> */}
@@ -1239,345 +1239,340 @@ const ListClients = () => {
                                   user._id && handleToggle(user._id, event)
                                 }
                               >
-                               <ArrowDropDownIcon style={{ fontSize: 22 }} />
+                                <ArrowDropDownIcon style={{ fontSize: 22 }} />
                               </button>
                               {expandedUserId === user._id && createPortal(
                                 <div className="lc-portal-root bet63-client-list">
-                              <div
-                                role="menu"
-                                className={`actions-td ${
-                                  expandedUserId === user._id ? "open" : ""
-                                }`}
-                                
-                              >
-                                <p className="bg-gray-800 hidden text-white p-2">
-                                  Action for the user - {user.username}
-                                </p>
-                                <button
-                                  className="closed bg-gray-800 text-white"
-                                  onClick={() =>
-                                    user._id && handleToggle(user._id)
-                                  }
-                                >
-                                  <CloseButton className="text-white" />
-                                </button>
-                                <div
-                                  className="actions-container p-4 bg-color bet63-client-actions"
-                                  onClick={(event) => {
-                                    // Bubble phase: run the selected action's own onClick first.
-                                    // Capture-phase closing unmounted the menu before its handlers ran.
-                                    const target = event.target as HTMLElement;
-                                    const action = target.closest("a");
-                                    if (action && action.textContent?.trim() !== "Matka Limit") {
-                                      setExpandedUserId(null);
-                                    }
-                                  }}
-                                  
-                                >
-                                  <a
-                                    className="hover:text-white  border-b pb-2"
-                                    style={{ color: "#007bff" }}
-                                    onClick={() => {
-                                      openModal("d");
-                                      getUserDetail(user);
-                                    }}
-                                  >
-                                    <BorderColorIcon /> Deposit
-                                  </a>
-                                  <a
-                                    className="border-b pb-2"
-                                    style={{ color: "#007bff" }}
-                                    onClick={() => {
-                                      openModal("w");
-                                      getUserDetail(user);
-                                    }}
-                                  >
-                                    <BorderColorIcon /> Withdraw
-                                  </a>
-
-                                  {/* {isAdmin(user) && */}
-                                  {userState?.user?.role == RoleType.admin && (
-                                    <a
-                                      className="border-b pb-2"
-                                      style={{ color: "#28a745" }}
-                                      onClick={() => {
-                                        openModal("e");
-                                        getUserDetail(user);
-                                        setModalType("EXP");
-                                      }}
-                                    >
-                                      <BorderColorIcon /> Exposer Limit
-                                    </a>
-                                  )}
-                                  
-
-                                  <a
-                                    className="border-b"
-                                    style={{ color: "#28a745" }}
-                                    onClick={() => handleOpenMatkaLimit(user)}
-                                  >
-                                    <BorderColorIcon /> Matka Limit
-                                  
-                                  </a>
-                                  
-                                  {openMatkaUserId === user._id && (
-                                      <div
-                                        className="input-group input-group-sm "
-                                        style={{ maxWidth: "250px" }}
-                                      >
-                                        <input
-                                          type="number"
-                                          className="form-control text-end border-success"
-                                          value={matkaAmount[user._id] ?? ""}
-                                          onChange={(e) =>
-                                            handleAmountChange(
-                                              user._id,
-                                              Number(e.target.value)
-                                              // user?.parent?.matkaLimit || maxParentMatkalimit
-                                            )
-                                          }
-                                        />
-
-                                        <button
-                                          onClick={() =>
-                                            updatematkalimit(user._id)
-                                          }
-                                          className="btn btn-success"
-                                          type="button"
-                                        >
-                                          Update
-                                        </button>
-                                      </div>
-                                    )}
-
-                                  {/* isAdmin(user) && */}
-                                  {userState?.user?.role == RoleType.admin && (
-                                    <a
-                                      className="border-b  pb-2"
-                                      style={{ color: "#28a745" }}
-                                      onClick={() => {
-                                        openModal("e");
-                                        getUserDetail(user);
-                                        setModalType("CRD");
-                                      }}
-                                    >
-                                      <BorderColorIcon /> Number Limit Withdrawl
-                                    </a>
-                                  )}
-                                  {/* {isAdmin(user) &&
-                                  user.role !== RoleType.admin && ( */}
-                                  <a
-                                    className="border-b pb-2"
-                                    onClick={() => {
-                                      openModal("p");
-                                      getUserDetail(user);
-                                    }}
-                                  >
-                                    <BorderColorIcon /> Change Password
-                                  </a>
-                                  {/* )} */}
-                                  {/* {isAdmin(user) &&
-                                  user.role !== RoleType.admin && ( */}
-                                  <a
-                                    className="border-b pb-2"
-                                    style={{ color: "#007bff" }}
-                                    onClick={() => {
-                                      openModal("s");
-                                      getUserDetail(user);
-                                    }}
-                                  >
-                                    <BorderColorIcon /> Edit{" "}
-                                    {`(${user.username})`}
-                                  </a>
-
-                                  {userState?.user?.role == RoleType.admin && (
-                                    <a
-                                      onClick={() => {
-                                        openModal("dt");
-                                        getUserDetail(user);
-                                      }}
-                                      style={{ color: "red" }}
-                                      className={`${
-                                        user?.role !== RoleType.admin
-                                          ? "d-block"
-                                          : "d-none"
+                                  <div
+                                    role="menu"
+                                    className={`actions-td ${expandedUserId === user._id ? "open" : ""
                                       }`}
+
+                                  >
+                                    <p className="bg-gray-800 hidden text-white p-2">
+                                      Action for the user - {user.username}
+                                    </p>
+                                    <button
+                                      className="closed bg-gray-800 text-white"
+                                      onClick={() =>
+                                        user._id && handleToggle(user._id)
+                                      }
                                     >
-                                      <PersonRemoveIcon /> Deactivate{" "}
-                                      {`(${user.username})`}
-                                    </a>
-                                  )}
-
-                                  {/* )}  */}
-                                  {userState?.user?.role == RoleType.admin && (
-                                    <a
-                                      className="border-b pb-2"
-                                      // style={{ display: "none" }}
-                                      onClick={() => {
-                                        openModal("gs");
-                                        getUserDetail(user);
-                                      }}
-                                    >
-                                      <BorderColorIcon /> Min Max Detail
-                                    </a>
-                                  )}
-
-                                  <CustomLink
-                                    to={`/accountstatement/${user?._id}`}
-                                    style={{ color: "#1e1e1e" }}
-                                    className="border-b pb-2"
-                                    onClick={() => {
-                                      openModal("");
-                                      getUserDetail(user);
-                                    }}
-                                  >
-                                    <BorderColorIcon /> Account Statement
-                                  </CustomLink>
-
-                                  <CustomLink
-                                    to={`/accountstatement-deposit/${user?._id}`}
-                                    style={{ color: "#1e1e1e" }}
-                                    className="border-b pb-2"
-                                    onClick={() => {
-                                      openModal("");
-                                      getUserDetail(user);
-                                    }}
-                                  >
-                                    <BorderColorIcon /> Limit Update Details
-                                  </CustomLink>
-
-                                  <CustomLink
-                                    to={`/operation/${user?.username}`}
-                                    style={{ color: "#1e1e1e" }}
-                                    className="border-b pb-2"
-                                    onClick={() => {
-                                      openModal("");
-                                      getUserDetail(user);
-                                    }}
-                                  >
-                                    <BorderColorIcon /> Account Operation
-                                  </CustomLink>
-
-                                  {lockshow ? (
+                                      <CloseButton className="text-white" />
+                                    </button>
                                     <div
-                                      style={{ width: "100%", height: "100%" }}
-                                      className="absolute top-0 left-0 p-1   max-w-mkd bg-white border rounded-md bg-opacity- f z-50"
+                                      className="actions-container p-4 bg-color bet63-client-actions"
+                                      onClick={(event) => {
+                                        // Bubble phase: run the selected action's own onClick first.
+                                        // Capture-phase closing unmounted the menu before its handlers ran.
+                                        const target = event.target as HTMLElement;
+                                        const action = target.closest("a");
+                                        if (action && action.textContent?.trim() !== "Matka Limit") {
+                                          setExpandedUserId(null);
+                                        }
+                                      }}
+
                                     >
-                                      {/* <div 
+                                      <a
+                                        className="hover:text-white  border-b pb-2"
+                                        style={{ color: "#007bff" }}
+                                        onClick={() => {
+                                          openModal("d");
+                                          getUserDetail(user);
+                                        }}
+                                      >
+                                        <BorderColorIcon /> Deposit
+                                      </a>
+                                      <a
+                                        className="border-b pb-2"
+                                        style={{ color: "#007bff" }}
+                                        onClick={() => {
+                                          openModal("w");
+                                          getUserDetail(user);
+                                        }}
+                                      >
+                                        <BorderColorIcon /> Withdraw
+                                      </a>
+
+                                      {/* {isAdmin(user) && */}
+                                      {userState?.user?.role == RoleType.admin && (
+                                        <a
+                                          className="border-b pb-2"
+                                          style={{ color: "#28a745" }}
+                                          onClick={() => {
+                                            openModal("e");
+                                            getUserDetail(user);
+                                            setModalType("EXP");
+                                          }}
+                                        >
+                                          <BorderColorIcon /> Exposer Limit
+                                        </a>
+                                      )}
+
+
+                                      <a
+                                        className="border-b"
+                                        style={{ color: "#28a745" }}
+                                        onClick={() => handleOpenMatkaLimit(user)}
+                                      >
+                                        <BorderColorIcon /> Matka Limit
+
+                                      </a>
+
+                                      {openMatkaUserId === user._id && (
+                                        <div
+                                          className="input-group input-group-sm "
+                                          style={{ maxWidth: "250px" }}
+                                        >
+                                          <input
+                                            type="number"
+                                            className="form-control text-end border-success"
+                                            value={matkaAmount[user._id] ?? ""}
+                                            onChange={(e) =>
+                                              handleAmountChange(
+                                                user._id,
+                                                Number(e.target.value)
+                                                // user?.parent?.matkaLimit || maxParentMatkalimit
+                                              )
+                                            }
+                                          />
+
+                                          <button
+                                            onClick={() =>
+                                              updatematkalimit(user._id)
+                                            }
+                                            className="btn btn-success"
+                                            type="button"
+                                          >
+                                            Update
+                                          </button>
+                                        </div>
+                                      )}
+
+                                      {/* isAdmin(user) && */}
+                                      {userState?.user?.role == RoleType.admin && (
+                                        <a
+                                          className="border-b  pb-2"
+                                          style={{ color: "#28a745" }}
+                                          onClick={() => {
+                                            openModal("e");
+                                            getUserDetail(user);
+                                            setModalType("CRD");
+                                          }}
+                                        >
+                                          <BorderColorIcon /> Number Limit Withdrawl
+                                        </a>
+                                      )}
+                                      {/* {isAdmin(user) &&
+                                  user.role !== RoleType.admin && ( */}
+                                      <a
+                                        className="border-b pb-2"
+                                        onClick={() => {
+                                          openModal("p");
+                                          getUserDetail(user);
+                                        }}
+                                      >
+                                        <BorderColorIcon /> Change Password
+                                      </a>
+                                      {/* )} */}
+                                      {/* {isAdmin(user) &&
+                                  user.role !== RoleType.admin && ( */}
+                                      <a
+                                        className="border-b pb-2"
+                                        style={{ color: "#007bff" }}
+                                        onClick={() => {
+                                          openModal("s");
+                                          getUserDetail(user);
+                                        }}
+                                      >
+                                        <BorderColorIcon /> Edit{" "}
+                                        {`(${user.username})`}
+                                      </a>
+
+                                      {userState?.user?.role == RoleType.admin && (
+                                        <a
+                                          onClick={() => {
+                                            openModal("dt");
+                                            getUserDetail(user);
+                                          }}
+                                          style={{ color: "red" }}
+                                          className={`${user?.role !== RoleType.admin
+                                              ? "d-block"
+                                              : "d-none"
+                                            }`}
+                                        >
+                                          <PersonRemoveIcon /> Deactivate{" "}
+                                          {`(${user.username})`}
+                                        </a>
+                                      )}
+
+                                      {/* )}  */}
+                                      {userState?.user?.role == RoleType.admin && (
+                                        <a
+                                          className="border-b pb-2"
+                                          // style={{ display: "none" }}
+                                          onClick={() => {
+                                            openModal("gs");
+                                            getUserDetail(user);
+                                          }}
+                                        >
+                                          <BorderColorIcon /> Min Max Detail
+                                        </a>
+                                      )}
+
+                                      <CustomLink
+                                        to={`/accountstatement/${user?._id}`}
+                                        style={{ color: "#1e1e1e" }}
+                                        className="border-b pb-2"
+                                        onClick={() => {
+                                          openModal("");
+                                          getUserDetail(user);
+                                        }}
+                                      >
+                                        <BorderColorIcon /> Account Statement
+                                      </CustomLink>
+
+                                      <CustomLink
+                                        to={`/accountstatement-deposit/${user?._id}`}
+                                        style={{ color: "#1e1e1e" }}
+                                        className="border-b pb-2"
+                                        onClick={() => {
+                                          openModal("");
+                                          getUserDetail(user);
+                                        }}
+                                      >
+                                        <BorderColorIcon /> Limit Update Details
+                                      </CustomLink>
+
+                                      <CustomLink
+                                        to={`/operation/${user?.username}`}
+                                        style={{ color: "#1e1e1e" }}
+                                        className="border-b pb-2"
+                                        onClick={() => {
+                                          openModal("");
+                                          getUserDetail(user);
+                                        }}
+                                      >
+                                        <BorderColorIcon /> Account Operation
+                                      </CustomLink>
+
+                                      {lockshow ? (
+                                        <div
+                                          style={{ width: "100%", height: "100%" }}
+                                          className="absolute top-0 left-0 p-1   max-w-mkd bg-white border rounded-md bg-opacity- f z-50"
+                                        >
+                                          {/* <div 
     className="bg-gray-300 text-black rounded-t-lg  p-6
            transform translate-y-full animate-slide-up"
   > */}
 
-                                      <div className="col-12 mb-2 col-md-12 text-center">
-                                        <table className="table table-striped  table-bordered  lenden len">
-                                          <thead>
-                                            <tr>
-                                              <td>id</td>
-                                              <td>Game</td>
-                                              <td>Action</td>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr>
-                                              <td>1</td>
-                                              <td>Casino</td>
-                                              <td>
-                                                <button
-                                                  onClick={() =>
-                                                    updateStatus(
-                                                      index,
-                                                      !user?.betLock,
-                                                      "bet"
-                                                    )
-                                                  }
-                                                  className={`btn ${
-                                                    user?.betLock
-                                                      ? "btn-primary"
-                                                      : "btn-danger"
-                                                  }`}
-                                                >
-                                                  {user?.betLock
-                                                    ? "Lock"
-                                                    : "Unlock"}
-                                                </button>
-                                              </td>
-                                            </tr>
+                                          <div className="col-12 mb-2 col-md-12 text-center">
+                                            <table className="table table-striped  table-bordered  lenden len">
+                                              <thead>
+                                                <tr>
+                                                  <td>id</td>
+                                                  <td>Game</td>
+                                                  <td>Action</td>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <td>1</td>
+                                                  <td>Casino</td>
+                                                  <td>
+                                                    <button
+                                                      onClick={() =>
+                                                        updateStatus(
+                                                          index,
+                                                          !user?.betLock,
+                                                          "bet"
+                                                        )
+                                                      }
+                                                      className={`btn ${user?.betLock
+                                                          ? "btn-primary"
+                                                          : "btn-danger"
+                                                        }`}
+                                                    >
+                                                      {user?.betLock
+                                                        ? "Lock"
+                                                        : "Unlock"}
+                                                    </button>
+                                                  </td>
+                                                </tr>
 
-                                            <tr>
-                                              <td>2</td>
-                                              <td>Cricket</td>
-                                              <td>
-                                                <button
-                                                  onClick={() =>
-                                                    updateStatus(
-                                                      index,
-                                                      !user?.betLock2,
-                                                      "bet2"
-                                                    )
-                                                  }
-                                                  className={`btn ${
-                                                    user?.betLock2
-                                                      ? "btn-primary"
-                                                      : "btn-danger"
-                                                  }`}
-                                                >
-                                                  {user?.betLock2
-                                                    ? "Lock"
-                                                    : "Unlock"}
-                                                </button>
-                                              </td>
-                                            </tr>
+                                                <tr>
+                                                  <td>2</td>
+                                                  <td>Cricket</td>
+                                                  <td>
+                                                    <button
+                                                      onClick={() =>
+                                                        updateStatus(
+                                                          index,
+                                                          !user?.betLock2,
+                                                          "bet2"
+                                                        )
+                                                      }
+                                                      className={`btn ${user?.betLock2
+                                                          ? "btn-primary"
+                                                          : "btn-danger"
+                                                        }`}
+                                                    >
+                                                      {user?.betLock2
+                                                        ? "Lock"
+                                                        : "Unlock"}
+                                                    </button>
+                                                  </td>
+                                                </tr>
 
-                                            <tr>
-                                              <td>3</td>
-                                              <td>Matka</td>
-                                              <td>
-                                                <button
-                                                  onClick={() =>
-                                                    updateStatus(
-                                                      index,
-                                                      !user?.betLock3,
-                                                      "bet3"
-                                                    )
-                                                  }
-                                                  className={`btn ${
-                                                    user?.betLock3
-                                                      ? "btn-primary"
-                                                      : "btn-danger"
-                                                  }`}
-                                                >
-                                                  {user?.betLock3
-                                                    ? "Lock"
-                                                    : "Unlock"}
-                                                </button>
-                                              </td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </div>
+                                                <tr>
+                                                  <td>3</td>
+                                                  <td>Matka</td>
+                                                  <td>
+                                                    <button
+                                                      onClick={() =>
+                                                        updateStatus(
+                                                          index,
+                                                          !user?.betLock3,
+                                                          "bet3"
+                                                        )
+                                                      }
+                                                      className={`btn ${user?.betLock3
+                                                          ? "btn-primary"
+                                                          : "btn-danger"
+                                                        }`}
+                                                    >
+                                                      {user?.betLock3
+                                                        ? "Lock"
+                                                        : "Unlock"}
+                                                    </button>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </div>
 
-                                      <button
-                                        onClick={() => setLockshow(!lockshow)}
-                                        className=" btn btn-danger text-white  rounded"
-                                      >
-                                        Close
-                                      </button>
-                                      {/* </div> */}
-                                    </div>
-                                  ) : (
-                                    ""
-                                  )}
+                                          <button
+                                            onClick={() => setLockshow(!lockshow)}
+                                            className=" btn btn-danger text-white  rounded"
+                                          >
+                                            Close
+                                          </button>
+                                          {/* </div> */}
+                                        </div>
+                                      ) : (
+                                        ""
+                                      )}
 
-                                  {user.role !== RoleType.admin && (
-                                    <a
-                                      className="border-b pb-2"
-                                      onClick={() => setLockshow(!lockshow)}
-                                    >
-                                      <VisibilityIcon /> Block Games
-                                    </a>
-                                  )}
+                                      {user.role !== RoleType.admin && (
+                                        <a
+                                          className="border-b pb-2"
+                                          onClick={() => setLockshow(!lockshow)}
+                                        >
+                                          <VisibilityIcon /> Block Games
+                                        </a>
+                                      )}
 
-                                  {/* {isAdmin(user) && (
+                                      {/* {isAdmin(user) && (
                                   <a
                                     onClick={() => {
                                       resetTxnPassword(user);
@@ -1586,8 +1581,8 @@ const ListClients = () => {
                                  <BorderColorIcon />    Transaction Password
                                   </a>
                                 )} */}
-                                </div>
-                              </div>
+                                    </div>
+                                  </div>
                                 </div>,
                                 document.body
                               )}
@@ -1600,21 +1595,20 @@ const ListClients = () => {
                                 <CustomLink
                                   className="text-blue"
                                   // to={`/list-clients/${user.username}`}
-                                  to={`/list-clients/${user.username}/${
-                                    user.role === "admin"
+                                  to={`/list-clients/${user.username}/${user.role === "admin"
                                       ? "sadmin"
                                       : user.role === "sadmin"
-                                      ? "suadmin"
-                                      : user.role === "suadmin"
-                                      ? "smdl"
-                                      : user.role === "smdl"
-                                      ? "mdl"
-                                      : user.role === "mdl"
-                                      ? "dl"
-                                      : user.role === "dl"
-                                      ? "user"
-                                      : "user"
-                                  }`}
+                                        ? "suadmin"
+                                        : user.role === "suadmin"
+                                          ? "smdl"
+                                          : user.role === "smdl"
+                                            ? "mdl"
+                                            : user.role === "mdl"
+                                              ? "dl"
+                                              : user.role === "dl"
+                                                ? "user"
+                                                : "user"
+                                    }`}
                                 >
                                   <p className="">{user.username}</p>
                                 </CustomLink>
@@ -1634,9 +1628,25 @@ const ListClients = () => {
                               <a
                                 href={`https://wa.me/?text=${encodeURIComponent(
                                   user.username?.startsWith("C")
-                                    ? `Login Details:\nName: ${user.username}\nAmount: ${mainBalanceUser(user).toFixed(2)}\nUsername: ${user.code || "N/A"}\nPassword: ${user.password}\n\nLink:\nClient Link: https://betx99.co`
-                                    : `Login Details:\nUsername: ${user.username}\nPassword: ${user.password}\n\nLinks:\nAdmin Link: https://admin.betx99.co/\nClient Link: https://betx99.co`
+                                    ? `Login Details:
+Username: ${user.code || "N/A"}
+Password: ${user.password}
+Amount: ${mainBalanceUser(user).toFixed(2)}
+
+Name: ${user.username || "N/A"}
+
+Client Link: https://betx99.co`
+                                    : `Login Details:
+Username: ${user.code || "N/A"}
+Password: ${user.password}
+Amount: ${mainBalanceUser(user).toFixed(2)}
+
+Name: ${user.username || "N/A"}
+
+Admin Link: https://admin.betx99.co/
+Client Link: https://betx99.co`
                                 )}`}
+
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 title="Share on WhatsApp"
@@ -1659,9 +1669,9 @@ const ListClients = () => {
                             </td>
                             <td>
                               {urole === "dl" ||
-                              urole === "mdl" ||
-                              urole === "smdl" ||
-                              urole === "suadmin"
+                                urole === "mdl" ||
+                                urole === "smdl" ||
+                                urole === "suadmin"
                                 ? user?.password
                                 : user?.password}
                             </td>
@@ -1807,9 +1817,9 @@ const ListClients = () => {
 
                             {/* <td>{user.exposerLimit ? user.exposerLimit : 0}</td> */}
                             {userState.user.comm && <><td className="text-center">{user.mcom}%</td>
-                            <td className="text-center">{user?.cacom || 0}%</td>
-                            <td className="text-center">{user.scom}%</td>
-                            <td className="text-center">{user.matcom}%</td></>}
+                              <td className="text-center">{user?.cacom || 0}%</td>
+                              <td className="text-center">{user.scom}%</td>
+                              <td className="text-center">{user.matcom}%</td></>}
 
                             {/* <td>{RoleName[user.role!]}</td> */}
                           </tr>
@@ -1817,51 +1827,51 @@ const ListClients = () => {
                       })}
                   </tbody>
                 </table>
-                     {users?.totalPages && users.totalPages > 1 && (
-  // <ReactPaginate
-  //   pageCount={users.totalPages}
-  //   onPageChange={handlePageClick}
-  //   forcePage={page - 1}
-  // />
-  // <ReactPaginate
-            
-  //               nextLabel="Next>>"
-  //               forcePage={page - 1}
-  //               onPageChange={handlePageClick}
-  //               // pageRangeDisplayed={5}
-  //               pageCount={users.totalPages}
+                {users?.totalPages && users.totalPages > 1 && (
+                  // <ReactPaginate
+                  //   pageCount={users.totalPages}
+                  //   onPageChange={handlePageClick}
+                  //   forcePage={page - 1}
+                  // />
+                  // <ReactPaginate
 
-  //                 // ✅ Hide Numbers
-  // pageRangeDisplayed={0}
-  // marginPagesDisplayed={0}
-  // breakLabel={null}
+                  //               nextLabel="Next>>"
+                  //               forcePage={page - 1}
+                  //               onPageChange={handlePageClick}
+                  //               // pageRangeDisplayed={5}
+                  //               pageCount={users.totalPages}
 
-  //               containerClassName={"pagination"}
-  //               activeClassName={"active"}
-  //               previousLabel={"<<Prev"}
-  //               breakClassName={"break-me"}
-          
-  //             />
+                  //                 // ✅ Hide Numbers
+                  // pageRangeDisplayed={0}
+                  // marginPagesDisplayed={0}
+                  // breakLabel={null}
 
-              <ReactPaginate
-  previousLabel={"<< Prev"}
-  nextLabel={"Next >>"}
-  onPageChange={handlePageClick}
-  forcePage={page - 1}
-  pageCount={users.totalPages}
+                  //               containerClassName={"pagination"}
+                  //               activeClassName={"active"}
+                  //               previousLabel={"<<Prev"}
+                  //               breakClassName={"break-me"}
 
-  // ✅ Hide Numbers
-  pageRangeDisplayed={0}
-  marginPagesDisplayed={0}
-  breakLabel={null}
+                  //             />
 
-  containerClassName="pagination"
-  activeClassName="active"
-/>
-)}
+                  <ReactPaginate
+                    previousLabel={"<< Prev"}
+                    nextLabel={"Next >>"}
+                    onPageChange={handlePageClick}
+                    forcePage={page - 1}
+                    pageCount={users.totalPages}
+
+                    // ✅ Hide Numbers
+                    pageRangeDisplayed={0}
+                    marginPagesDisplayed={0}
+                    breakLabel={null}
+
+                    containerClassName="pagination"
+                    activeClassName="active"
+                  />
+                )}
               </div>
-         
-              
+
+
             </div>
 
             {/* <div className=" h-20 mt-10 mb-10 bg-transparent text-white">..................</div> */}
