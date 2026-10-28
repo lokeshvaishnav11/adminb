@@ -1,26 +1,589 @@
-import betService from "../../../services/bet.service";
-import { AxiosResponse } from "axios";
+
+// /* eslint-disable */
+
+// import React from "react";
+// import { createPortal } from "react-dom";
+// import { useNavigate, useParams } from "react-router-dom";
+// import PaymentsIcon from "@mui/icons-material/Payments";
+
+// import betService from "../../../services/bet.service";
+// import { CustomLink } from "../../../pages/_layout/elements/custom-link";
+// import "./ClientLedger.css";
+
+// interface GroupedEntry {
+//   agent: string;
+//   amount: number;
+//   settled: number;
+//   final: number;
+//   ChildId: string;
+// }
+
+// type SettlementType = "lena" | "dena";
+
+// interface LedgerTotals {
+//   amount: number;
+//   settled: number;
+//   final: number;
+// }
+
+// const formatAmount = (value: number): string => {
+//   return Number(value || 0).toLocaleString("en-IN", {
+//     minimumFractionDigits: 2,
+//     maximumFractionDigits: 2,
+//   });
+// };
+
+// const calculateTotals = (
+//   rows: GroupedEntry[]
+// ): LedgerTotals => {
+//   return rows.reduce(
+//     (acc, item) => {
+//       acc.amount += item.amount;
+//       acc.settled += item.settled;
+//       acc.final += item.final;
+//       return acc;
+//     },
+//     {
+//       amount: 0,
+//       settled: 0,
+//       final: 0,
+//     }
+//   );
+// };
+
+// const AllClientLedger = () => {
+//   // ORIGINAL ROUTING
+//   const sendId = useParams().pid;
+//   const navigate = useNavigate();
+
+//   // ORIGINAL LEDGER DATA
+//   const [lena, setLena] = React.useState<GroupedEntry[]>([]);
+//   const [dena, setDena] = React.useState<GroupedEntry[]>([]);
+
+//   // UI STATE
+//   const [loading, setLoading] = React.useState(false);
+//   const [error, setError] = React.useState("");
+//   const [search, setSearch] = React.useState("");
+//   const [activeTab, setActiveTab] =
+//     React.useState<SettlementType>("lena");
+
+//   // ORIGINAL SETTLEMENT STATE
+//   const [showModal, setShowModal] = React.useState(false);
+//   const [selectedEntry, setSelectedEntry] =
+//     React.useState<GroupedEntry | null>(null);
+//   const [inputAmount, setInputAmount] =
+//     React.useState<number>(0);
+//   const [remark, setRemark] = React.useState<string>("");
+//   const [modalType, setModalType] =
+//     React.useState<SettlementType | null>(null);
+//   const [submitting, setSubmitting] = React.useState(false);
+
+//   // ORIGINAL TOTAL CALCULATIONS
+//   const lenaTotals = React.useMemo(
+//     () => calculateTotals(lena),
+//     [lena]
+//   );
+
+//   const denaTotals = React.useMemo(
+//     () => calculateTotals(dena),
+//     [dena]
+//   );
+
+//   // ORIGINAL API AND CHILD REDIRECT
+//   const fetchLedger = React.useCallback(async () => {
+//     setLoading(true);
+//     setError("");
+
+//     try {
+//       const res = await betService.pponeledger(sendId);
+
+//       const { lenaArray, denaArray, user } = res.data.data;
+
+//       if (user?.role === "dl") {
+//         navigate(
+//           `/admin/list-clients/${user.username}/user`,
+//           { replace: true }
+//         );
+//         return;
+//       }
+
+//       setLena(lenaArray || []);
+//       setDena(denaArray || []);
+//     } catch (err) {
+//       console.error("Ledger fetch failed:", err);
+//       setError("Unable to load ledger. Please try again.");
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [sendId, navigate]);
+
+//   React.useEffect(() => {
+//     fetchLedger();
+//   }, [fetchLedger]);
+
+//   // UI FILTER ONLY
+//   const activeRows = activeTab === "lena" ? lena : dena;
+//   const activeTotals =
+//     activeTab === "lena" ? lenaTotals : denaTotals;
+
+//   const filteredRows = React.useMemo(() => {
+//     const query = search.trim().toLowerCase();
+
+//     if (!query) return activeRows;
+
+//     return activeRows.filter((row) =>
+//       row.agent.toLowerCase().includes(query)
+//     );
+//   }, [activeRows, search]);
+
+//   // ORIGINAL SETTLEMENT MODAL
+//   const openSettlement = (
+//     row: GroupedEntry,
+//     type: SettlementType
+//   ) => {
+//     setSelectedEntry(row);
+//     setInputAmount(0);
+//     setRemark("");
+//     setModalType(type);
+//     setShowModal(true);
+//   };
+
+//   const closeSettlement = () => {
+//     if (submitting) return;
+//     setShowModal(false);
+//   };
+
+//   React.useEffect(() => {
+//     if (!showModal) return;
+
+//     const previousOverflow = document.body.style.overflow;
+//     document.body.style.overflow = "hidden";
+
+//     const onKeyDown = (event: KeyboardEvent) => {
+//       if (event.key === "Escape" && !submitting) {
+//         setShowModal(false);
+//       }
+//     };
+
+//     document.addEventListener("keydown", onKeyDown);
+
+//     return () => {
+//       document.body.style.overflow = previousOverflow;
+//       document.removeEventListener("keydown", onKeyDown);
+//     };
+//   }, [showModal, submitting]);
+
+//   // ORIGINAL SETTLEMENT API AND SIGN LOGIC
+//   const submitSettlement = async () => {
+//     if (!selectedEntry || !modalType || submitting) return;
+
+//     if (
+//       inputAmount >
+//       Number(Math.abs(selectedEntry.final).toFixed(2))
+//     ) {
+//       alert(
+//         "Settlement amount cannot exceed Settle Amount."
+//       );
+//       return;
+//     }
+
+//     const settleamount =
+//       modalType === "lena"
+//         ? -Math.abs(inputAmount)
+//         : Math.abs(inputAmount);
+
+//     const data: any = {
+//       ChildId: selectedEntry.ChildId,
+//       settleamount,
+//       remark,
+//       type: modalType,
+//     };
+
+//     setSubmitting(true);
+
+//     try {
+//       await betService.postsettelement(data);
+//       setShowModal(false);
+
+//       // ORIGINAL REFRESH BEHAVIOUR
+//       window.location.reload();
+//     } catch (err) {
+//       alert("Error during settlement.");
+//       console.error(err);
+//     } finally {
+//       setSubmitting(false);
+//     }
+//   };
+
+//   return (
+//     <div className="client-ledger-page">
+
+//       {/* HEADER */}
+//       <div className="clp-header">
+//         <div>
+//           <span className="clp-eyebrow">
+//             Accounts / Settlement
+//           </span>
+
+//           <h1>All Client Ledger</h1>
+
+//           <p>
+//             Manage agent receivables, payables and settlements.
+//           </p>
+//         </div>
+
+//         <button
+//           type="button"
+//           className="clp-refresh"
+//           onClick={fetchLedger}
+//           disabled={loading}
+//         >
+//           {loading ? "Loading..." : "Refresh"}
+//         </button>
+//       </div>
+
+//       {/* SUMMARY */}
+//       <div className="clp-summary">
+//         <div className="clp-summary-card">
+//           <span>Total Receiving</span>
+
+//           <strong>
+//             ₹ {formatAmount(lenaTotals.final)}
+//           </strong>
+
+//           <small>
+//             Lena Hai · {lena.length} Agents
+//           </small>
+//         </div>
+
+//         <div className="clp-summary-card">
+//           <span>Total Payable</span>
+
+//           <strong className="negative">
+//             ₹ {formatAmount(denaTotals.final)}
+//           </strong>
+
+//           <small>
+//             Dena Hai · {dena.length} Agents
+//           </small>
+//         </div>
+//       </div>
+
+//       {/* MAIN LEDGER */}
+//       <div className="clp-panel">
+
+//         <div className="clp-toolbar">
+//           {/* UI TABS */}
+//           <div
+//             style={{
+//               display: "flex",
+//               gap: 8,
+//               flexWrap: "wrap",
+//               alignItems: "center",
+//             }}
+//           >
+//             <button
+//               type="button"
+//               onClick={() => setActiveTab("lena")}
+//               style={{
+//                 border: "1px solid #dce4ee",
+//                 borderRadius: 7,
+//                 padding: "10px 15px",
+//                 background:
+//                   activeTab === "lena" ? "#123a7c" : "#fff",
+//                 color:
+//                   activeTab === "lena" ? "#fff" : "#52647a",
+//                 fontSize: 13,
+//                 fontWeight: 600,
+//                 fontFamily: "inherit",
+//                 cursor: "pointer",
+//               }}
+//             >
+//               Lena Hai ({lena.length})
+//             </button>
+
+//             <button
+//               type="button"
+//               onClick={() => setActiveTab("dena")}
+//               style={{
+//                 border: "1px solid #dce4ee",
+//                 borderRadius: 7,
+//                 padding: "10px 15px",
+//                 background:
+//                   activeTab === "dena" ? "#123a7c" : "#fff",
+//                 color:
+//                   activeTab === "dena" ? "#fff" : "#52647a",
+//                 fontSize: 13,
+//                 fontWeight: 600,
+//                 fontFamily: "inherit",
+//                 cursor: "pointer",
+//               }}
+//             >
+//               Dena Hai ({dena.length})
+//             </button>
+//           </div>
+
+//           {/* SEARCH */}
+//           <div className="clp-field">
+//             <label>Search Agent</label>
+
+//             <input
+//               type="text"
+//               placeholder="Search agent..."
+//               value={search}
+//               onChange={(event) =>
+//                 setSearch(event.target.value)
+//               }
+//             />
+//           </div>
+//         </div>
+
+//         {error && (
+//           <div className="clp-error">{error}</div>
+//         )}
+
+//         {/* TABLE */}
+//         <div className="clp-table-wrap">
+//           <table className="clp-table">
+//             <thead>
+//               <tr>
+//                 <th>AGENT</th>
+//                 <th className="clp-number">AMOUNT</th>
+//                 <th className="clp-number">SETTLED</th>
+//                 <th className="clp-number">FINAL</th>
+//                 <th>ACTION</th>
+//               </tr>
+//             </thead>
+
+//             <tbody>
+//               {filteredRows.length === 0 && (
+//                 <tr>
+//                   <td colSpan={5} className="clp-empty">
+//                     {loading
+//                       ? "Loading ledger..."
+//                       : "No settlement records found"}
+//                   </td>
+//                 </tr>
+//               )}
+
+//               {filteredRows.map((row) => (
+//                 <tr key={row.ChildId}>
+//                   <td>
+//                     {/* ORIGINAL CHILD LINK */}
+//                     <CustomLink
+//                       to={`/all-settlement/${row.ChildId}`}
+//                       className="cl-agent-link"
+//                     >
+//                       {row.agent}
+//                     </CustomLink>
+//                   </td>
+
+//                   <td className="clp-number">
+//                     {formatAmount(row.amount)}
+//                   </td>
+
+//                   <td className="clp-number">
+//                     {formatAmount(row.settled)}
+//                   </td>
+
+//                   <td className="clp-number">
+//                     <span
+//                       className={
+//                         activeTab === "lena"
+//                           ? "clp-credit"
+//                           : "clp-debit"
+//                       }
+//                     >
+//                       {formatAmount(row.final)}
+//                     </span>
+//                   </td>
+
+//                   <td>
+//                     <button
+//                       type="button"
+//                       className="cl-settle-btn"
+//                       onClick={() =>
+//                         openSettlement(row, activeTab)
+//                       }
+//                     >
+//                       <PaymentsIcon fontSize="small" />
+//                       Settlement
+//                     </button>
+//                   </td>
+//                 </tr>
+//               ))}
+
+//               {/* ORIGINAL TOTALS */}
+//               <tr className="cl-total-row">
+//                 <td>
+//                   {activeTab === "lena"
+//                     ? "LENA HAI"
+//                     : "DENA HAI"}
+//                 </td>
+
+//                 <td className="clp-number">
+//                   {formatAmount(activeTotals.amount)}
+//                 </td>
+
+//                 <td className="clp-number">
+//                   {formatAmount(activeTotals.settled)}
+//                 </td>
+
+//                 <td className="clp-number">
+//                   {formatAmount(activeTotals.final)}
+//                 </td>
+
+//                 <td />
+//               </tr>
+//             </tbody>
+//           </table>
+//         </div>
+
+//         <div className="clp-table-footer">
+//           <span>
+//             Showing {filteredRows.length} of{" "}
+//             {activeRows.length} agents
+//           </span>
+
+//           <span>
+//             {activeTab === "lena"
+//               ? "Total Receiving"
+//               : "Total Payable"}
+//             : ₹ {formatAmount(activeTotals.final)}
+//           </span>
+//         </div>
+//       </div>
+
+//       {/* SETTLEMENT MODAL */}
+//       {showModal &&
+//         selectedEntry &&
+//         createPortal(
+//           <div
+//             className="cl-modal-overlay"
+//             onMouseDown={(event) => {
+//               if (event.target === event.currentTarget) {
+//                 closeSettlement();
+//               }
+//             }}
+//           >
+//             <div
+//               className="cl-modal"
+//               role="dialog"
+//               aria-modal="true"
+//               aria-labelledby="cl-modal-title"
+//             >
+//               <div className="cl-modal-header">
+//                 <div>
+//                   <span className="cl-modal-kicker">
+//                     Account Settlement
+//                   </span>
+
+//                   <h2 id="cl-modal-title">
+//                     Settle with {selectedEntry.agent}
+//                   </h2>
+//                 </div>
+
+//                 <button
+//                   type="button"
+//                   className="cl-modal-close"
+//                   onClick={closeSettlement}
+//                   disabled={submitting}
+//                   aria-label="Close"
+//                 >
+//                   ×
+//                 </button>
+//               </div>
+
+//               <div className="cl-modal-body">
+//                 <div className="cl-modal-balance">
+//                   <span>
+//                     Settle Amount (Fixed): {modalType}
+//                   </span>
+
+//                   <strong>
+//                     ₹ {formatAmount(selectedEntry.final)}
+//                   </strong>
+//                 </div>
+
+//                 <label className="cl-field">
+//                   <span>
+//                     Settlement Amount
+//                   </span>
+
+//                   <input
+//                     type="number"
+//                     value={inputAmount}
+//                     onChange={(event) =>
+//                       setInputAmount(
+//                         Math.abs(Number(event.target.value))
+//                       )
+//                     }
+//                   />
+
+//                   <small>
+//                     Maximum ₹{" "}
+//                     {formatAmount(
+//                       Math.abs(selectedEntry.final)
+//                     )}
+//                   </small>
+//                 </label>
+
+//                 <label className="cl-field">
+//                   <span>Remark</span>
+
+//                   <input
+//                     type="text"
+//                     value={remark}
+//                     onChange={(event) =>
+//                       setRemark(event.target.value)
+//                     }
+//                   />
+//                 </label>
+//               </div>
+
+//               <div className="cl-modal-footer">
+//                 <button
+//                   type="button"
+//                   className="cl-cancel-btn"
+//                   onClick={closeSettlement}
+//                   disabled={submitting}
+//                 >
+//                   Close
+//                 </button>
+
+//                 <button
+//                   type="button"
+//                   className="cl-submit-btn"
+//                   onClick={submitSettlement}
+//                   disabled={submitting}
+//                 >
+//                   {submitting ? "Processing..." : "Submit"}
+//                 </button>
+//               </div>
+//             </div>
+//           </div>,
+//           document.body
+//         )}
+//     </div>
+//   );
+// };
+
+// export default React.memo(AllClientLedger);
+
+
+
+
+/* eslint-disable */
+
 import React from "react";
-import "./ClientLedger.css"; // Import the CSS file
-import { green } from "@mui/material/colors";
+import { createPortal } from "react-dom";
+import { useParams } from "react-router-dom";
 import PaymentsIcon from "@mui/icons-material/Payments";
-import { useAppSelector } from "../../../redux/hooks";
-import User from "../../../models/User";
-import { selectUserData } from "../../../redux/actions/login/loginSlice";
-import { useNavigate, useParams } from "react-router-dom";
+
+import betService from "../../../services/bet.service";
 import { CustomLink } from "../../../pages/_layout/elements/custom-link";
 
-interface LedgerEntry {
-  settled: any;
-  ChildId: string;
-  username: string;
-  commissionlega: number;
-  commissiondega: number;
-  money: number;
-  narration: string;
-  _id: string;
-  user: any;
-}
+import "./ClientLedger.css";
 
 interface GroupedEntry {
   agent: string;
@@ -30,489 +593,708 @@ interface GroupedEntry {
   ChildId: string;
 }
 
-const AllClientLedger = () => {
-  //   const [tableData, setTableData] = React.useState<LedgerItem[]>([
+type SettlementType = "lena" | "dena";
 
-  const userState = useAppSelector<{ user: User }>(selectUserData);
-  ////console.log(userState)
+interface LedgerTotals {
+  amount: number;
+  settled: number;
+  final: number;
+}
 
-  const [showModal, setShowModal] = React.useState(false);
-  const [selectedEntry, setSelectedEntry] = React.useState<GroupedEntry | null>(
-    null
-  );
-  const [inputAmount, setInputAmount] = React.useState<number>(0);
-  const [remark, setRemark] = React.useState<string>("");
-  const [modalType, setModalType] = React.useState<"lena" | "dena" | null>(
-    null
-  );
-
-  const [lena, setLena] = React.useState<GroupedEntry[]>([]);
-  const [dena, setDena] = React.useState<GroupedEntry[]>([]);
-  const lenaTotals = lena.reduce(
-    (acc, item) => {
-      acc.amount += item.amount;
-      acc.settled += item.settled;
-      acc.final += item.final;
-      return acc;
-    },
-    { amount: 0, settled: 0, final: 0 }
-  );
-
-  const denaTotals = dena.reduce(
-    (acc, item) => {
-      acc.amount += item.amount;
-      acc.settled += item.settled;
-      acc.final += item.final;
-      return acc;
-    },
-    { amount: 0, settled: 0, final: 0 }
-  );
-
-  const grandTotals = {
-    lena: lenaTotals.final,
-    dena: denaTotals.final,
-  };
-  // const processLedgerData = (
-  //   data: LedgerEntry[][]
-  // ): { lenaArray: GroupedEntry[]; denaArray: GroupedEntry[] } => {
-
-  //   // userState.user.role === "admin"
-
-  //   // const flatData = [...(data[0] || []), ...(data[1] || [])]; //old wala hai
-
-  //   // const flatData = [...(data[0] || []), ...(data[0] || [])]; // ye naye wala hai for other than superadmin
-
-  //   const flatData =
-  //     userState.user.role === "admin"
-  //       ? data[0] // for admin
-  //       : data[0]; // for others
-
-  //   const settledMap: Record<string, number> = {};
-  //   flatData.forEach((entry: any) => {
-  //     if (entry.settled) {
-  //       if (!settledMap[entry.ChildId]) settledMap[entry.ChildId] = 0;
-  //       settledMap[entry.ChildId] += Math.abs(entry.money);
-  //     }
-  //   });
-
-  //   const activeMap: Record<
-  //     string,
-  //     { username: string; positive: number; negative: number }
-  //   > = {};
-  //   flatData.forEach((entry: any) => {
-  //     if (!entry.settled) {
-  //       const id = entry.ChildId;
-  //       const username = entry.username + " (" + entry.cname + ")";
-
-  //       // Compute money based on role
-  //       // const money = userState.user.role === "dl" ? entry.money - entry.commissiondega : entry.money;
-
-  //       const commission = userState.user.role === "dl" ? entry.commissiondega : 0;
-  //       const money = entry.money - commission;
-
-  //       // const money =  entry.money + entry.commissiondega ;
-
-  //       if (!activeMap[id]) {
-  //         activeMap[id] = { username, positive: 0, negative: 0 };
-  //       }
-
-  //       if (money > 0) {
-  //         activeMap[id].positive += Math.abs(money);
-  //       } else {
-  //         activeMap[id].negative += Math.abs(money);
-  //       }
-  //     }
-  //   });
-
-  //   const lenaArray: GroupedEntry[] = [];
-  //   const denaArray: GroupedEntry[] = [];
-
-  //   Object.entries(activeMap).forEach(
-  //     ([ChildId, { username, positive, negative }]) => {
-  //       const rawAmount = positive - negative;
-  //       const settledAmount = settledMap[ChildId] || 0;
-  //       const netFinal = Math.max(0, Math.abs(Math.abs(rawAmount) - Math.abs(settledAmount)));
-  //       // const netFinal = Math.abs(rawAmount - settledAmount);
-
-  //       const baseData = {
-  //         agent: username,
-  //         amount: Math.abs(rawAmount),
-  //         settled: settledAmount,
-  //         final: netFinal,
-  //         ChildId,
-  //       };
-
-  //       //console.log(rawAmount - settledAmount, "raww amountt")
-
-  //       if (rawAmount - settledAmount  >= 0) {
-  //         lenaArray.push(baseData);
-  //       } else {
-  //         denaArray.push(baseData);
-  //       }
-  //     }
-  //   );
-
-  //   return { lenaArray, denaArray };
-  // };
-
-  const processLedgerData = (
-    data: LedgerEntry[][]
-  ): { lenaArray: GroupedEntry[]; denaArray: GroupedEntry[] } => {
-    // userState.user.role === "admin"
-
-    // const flatData = [...(data[0] || []), ...(data[1] || [])]; //old wala hai
-
-    // const flatData = [...(data[0] || []), ...(data[0] || [])]; // ye naye wala hai for other than superadmin
-
-    const flatData =
-      userState.user.role === "admin"
-        ? data[0] // for admin
-        : data[0]; // for others
-
-    const settledMap: Record<string, number> = {};
-    flatData.forEach((entry: any) => {
-      if (entry.settled) {
-        if (!settledMap[entry.ChildId]) settledMap[entry.ChildId] = 0;
-        settledMap[entry.ChildId] += entry.money;
-      }
-    });
-
-    const activeMap: Record<
-      string,
-      { username: string; positive: number; negative: number }
-    > = {};
-    flatData.forEach((entry: any) => {
-      if (!entry.settled) {
-        const id = entry.ChildId;
-        const username = entry.username + " (" + entry.cname + ")";
-
-        // Compute money based on role
-        // const money = userState.user.role === "dl" ? entry.money - entry.commissiondega : entry.money;
-
-        const commission =
-          userState.user.role === "dl" ? entry.commissiondega : 0;
-        const money = entry.money - commission;
-
-        // const money =  entry.money + entry.commissiondega ;
-
-        if (!activeMap[id]) {
-          activeMap[id] = { username, positive: 0, negative: 0 };
-        }
-
-        if (money > 0) {
-          activeMap[id].positive += Math.abs(money);
-        } else {
-          activeMap[id].negative += Math.abs(money);
-        }
-      }
-    });
-
-    const lenaArray: GroupedEntry[] = [];
-    const denaArray: GroupedEntry[] = [];
-
-    Object.entries(activeMap).forEach(
-      ([ChildId, { username, positive, negative }]) => {
-        const rawAmount = positive - negative;
-        ////console.log(positive, negative, rawAmount, username);
-        const settledAmount = settledMap[ChildId] || 0;
-        // const netFinal = Math.max(0, Math.abs(rawAmount  + settledAmount));
-        const netFinal = rawAmount + settledAmount;
-
-        ////console.log(netFinal, settledAmount, "GHJK", username);
-        const baseData = {
-          agent: username,
-          amount: rawAmount,
-          settled: settledAmount,
-          final: netFinal,
-          ChildId,
-        };
-
-        ////console.log(rawAmount - settledAmount, "raww amountt");
-
-        if (netFinal >= 0) {
-          lenaArray.push(baseData);
-        } else {
-          denaArray.push(baseData);
-        }
-      }
-    );
-
-    return { lenaArray, denaArray };
-  };
-  const settlementButton = async (id: any) => {
-    // //console.log(id,"chid from settlementButtonx")
-    const data: any = { ChildId: id };
-    await betService.postsettelement(data);
-  };
-
-  const sendId = useParams().pid;
-  ////console.log(sendId, "sendid ");
-
-  const navigate = useNavigate();
-
-  // React.useEffect(() => {
-  //   if (!sendId) return;
-  //   betService
-  //     .pponeledger(sendId)
-  //     .then((res: AxiosResponse<{ data: LedgerEntry[][] }>) => {
-  //       const usert: any = res.data.data[2];
-  //       if (usert?.user?.role === "dl") {
-  //         return navigate(`/admin/list-clients/${usert.user.username}/user`, {
-  //           replace: true,
-  //         });
-  //       }
-  //       ////console.log(usert.user.role, "role");
-  //       const { lenaArray, denaArray } = processLedgerData(res.data.data);
-  //       setLena(lenaArray);
-  //       setDena(denaArray);
-  //       // // console.log(res, "Processed ledger data 222");
-  //     });
-  // }, [sendId, navigate]);
-
-
-  const fetchLedger = async () => {
-  let res;
-
-
-    // 🔥 pponeledger
-    res = await betService.pponeledger(sendId);
- 
-
-  const { lenaArray, denaArray,user } = res.data.data;
-
-    if (user?.role === "dl") {
-          return navigate(`/admin/list-clients/${user.username}/user`, {
-            replace: true,
-          });
-        }
-
-  setLena(lenaArray || []);
-  setDena(denaArray || []);
+const formatAmount = (value: number): string => {
+  return Number(value || 0).toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 };
 
-React.useEffect(() => {
- 
-  fetchLedger();
-}, [sendId]);
+const calculateTotals = (
+  rows: GroupedEntry[]
+): LedgerTotals => {
+  return rows.reduce(
+    (acc, item) => {
+      acc.amount += item.amount;
+      acc.settled += item.settled;
+      acc.final += item.final;
+
+      return acc;
+    },
+    {
+      amount: 0,
+      settled: 0,
+      final: 0,
+    }
+  );
+};
+
+const AllClientLedger = () => {
+  // ORIGINAL CHILD / AGENT ID
+  const sendId = useParams().pid;
+
+  // LEDGER DATA
+  const [lena, setLena] = React.useState<GroupedEntry[]>([]);
+  const [dena, setDena] = React.useState<GroupedEntry[]>([]);
+
+  // UI STATE
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
+  const [search, setSearch] = React.useState("");
+
+  const [activeTab, setActiveTab] =
+    React.useState<SettlementType>("lena");
+
+  // SETTLEMENT STATE
+  const [showModal, setShowModal] = React.useState(false);
+
+  const [selectedEntry, setSelectedEntry] =
+    React.useState<GroupedEntry | null>(null);
+
+  const [inputAmount, setInputAmount] =
+    React.useState<number>(0);
+
+  const [remark, setRemark] =
+    React.useState<string>("");
+
+  const [modalType, setModalType] =
+    React.useState<SettlementType | null>(null);
+
+  const [submitting, setSubmitting] =
+    React.useState(false);
+
+  // TOTALS
+  const lenaTotals = React.useMemo(
+    () => calculateTotals(lena),
+    [lena]
+  );
+
+  const denaTotals = React.useMemo(
+    () => calculateTotals(dena),
+    [dena]
+  );
+
+  // FETCH SELECTED AGENT / CHILD LEDGER
+  const fetchLedger = React.useCallback(async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      // ORIGINAL API
+      const res = await betService.pponeledger(sendId);
+
+      const { lenaArray, denaArray } = res.data.data;
+
+      // IMPORTANT:
+      // DL par user list redirect REMOVE.
+      // DL ke clients ka ledger isi page par dikhega.
+      setLena(lenaArray || []);
+      setDena(denaArray || []);
+
+    } catch (err) {
+      console.error("Ledger fetch failed:", err);
+
+      setLena([]);
+      setDena([]);
+
+      setError(
+        "Unable to load ledger. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [sendId]);
+
+  React.useEffect(() => {
+    fetchLedger();
+  }, [fetchLedger]);
+
+  // ACTIVE TABLE
+  const activeRows =
+    activeTab === "lena" ? lena : dena;
+
+  const activeTotals =
+    activeTab === "lena"
+      ? lenaTotals
+      : denaTotals;
+
+  // SEARCH FILTER - UI ONLY
+  const filteredRows = React.useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    if (!query) {
+      return activeRows;
+    }
+
+    return activeRows.filter((row) => {
+      return (
+        row.agent?.toLowerCase().includes(query) ||
+        String(row.ChildId).toLowerCase().includes(query)
+      );
+    });
+  }, [activeRows, search]);
+
+  // OPEN SETTLEMENT
+  const openSettlement = (
+    row: GroupedEntry,
+    type: SettlementType
+  ) => {
+    setSelectedEntry(row);
+    setInputAmount(0);
+    setRemark("");
+    setModalType(type);
+    setShowModal(true);
+  };
+
+  // CLOSE SETTLEMENT
+  const closeSettlement = () => {
+    if (submitting) return;
+
+    setShowModal(false);
+  };
+
+  // MODAL SCROLL LOCK
+  React.useEffect(() => {
+    if (!showModal) return;
+
+    const previousOverflow =
+      document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (
+        event.key === "Escape" &&
+        !submitting
+      ) {
+        setShowModal(false);
+      }
+    };
+
+    document.addEventListener(
+      "keydown",
+      handleEscape
+    );
+
+    return () => {
+      document.body.style.overflow =
+        previousOverflow;
+
+      document.removeEventListener(
+        "keydown",
+        handleEscape
+      );
+    };
+  }, [showModal, submitting]);
+
+  // ORIGINAL SETTLEMENT LOGIC
+  const submitSettlement = async () => {
+    if (
+      !selectedEntry ||
+      !modalType ||
+      submitting
+    ) {
+      return;
+    }
+
+    // ORIGINAL MAXIMUM AMOUNT CHECK
+    if (
+      inputAmount >
+      Number(
+        Math.abs(selectedEntry.final).toFixed(2)
+      )
+    ) {
+      alert(
+        "Settlement amount cannot exceed Settle Amount."
+      );
+
+      return;
+    }
+
+    // ORIGINAL LENA / DENA SIGN LOGIC
+    const settleamount =
+      modalType === "lena"
+        ? -Math.abs(inputAmount)
+        : Math.abs(inputAmount);
+
+    // ORIGINAL API PAYLOAD
+    const data: any = {
+      ChildId: selectedEntry.ChildId,
+      settleamount,
+      remark,
+      type: modalType,
+    };
+
+    setSubmitting(true);
+
+    try {
+      await betService.postsettelement(data);
+
+      setShowModal(false);
+
+      // ORIGINAL REFRESH BEHAVIOUR
+      window.location.reload();
+
+    } catch (err) {
+      alert("Error during settlement.");
+      console.error(err);
+
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <>
-      <p className="text-center bg-secondary tx-12 text-white p-1">My Ledger</p>
+    <div className="client-ledger-page">
 
-      <div className="ledger-container">
-        <h2 className="ledger-title">All Client Ledger</h2>
+      {/* HEADER */}
+      <div className="clp-header">
+        <div>
+          <span className="clp-eyebrow">
+            Accounts / Settlement
+          </span>
 
-        <h3>PAYMENT RECEIVING FROM (LENA HAI)</h3>
-        <div className="table-section overflow-auto">
-          <table className="ledger-table">
+          <h1>All Client Ledger</h1>
+
+          <p>
+            Manage agent receivables,
+            payables and settlements.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          className="clp-refresh"
+          onClick={fetchLedger}
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Refresh"}
+        </button>
+      </div>
+
+      {/* SUMMARY CARDS */}
+      <div className="clp-summary">
+
+        {/* RECEIVING */}
+        <div className="clp-summary-card">
+          <span>Total Receiving</span>
+
+          <strong
+            style={{ color: "#16834a" }}
+          >
+            ₹ {formatAmount(lenaTotals.final)}
+          </strong>
+
+          <small>
+            Lena Hai · {lena.length} Agents
+          </small>
+        </div>
+
+        {/* PAYABLE */}
+        <div className="clp-summary-card">
+          <span>Total Payable</span>
+
+          <strong className="negative">
+            ₹ {formatAmount(denaTotals.final)}
+          </strong>
+
+          <small>
+            Dena Hai · {dena.length} Agents
+          </small>
+        </div>
+
+      </div>
+
+      {/* LEDGER PANEL */}
+      <div className="clp-panel">
+
+        {/* TOOLBAR */}
+        <div className="clp-toolbar">
+
+          {/* TABS */}
+          <div
+            style={{
+              display: "flex",
+              gap: 8,
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+
+            <button
+              type="button"
+              onClick={() =>
+                setActiveTab("lena")
+              }
+              style={{
+                border: "1px solid #dce4ee",
+                borderRadius: 7,
+                padding: "10px 15px",
+                background:
+                  activeTab === "lena"
+                    ? "#123a7c"
+                    : "#fff",
+                color:
+                  activeTab === "lena"
+                    ? "#fff"
+                    : "#52647a",
+                fontSize: 13,
+                fontWeight: 600,
+                fontFamily: "inherit",
+                cursor: "pointer",
+              }}
+            >
+              Lena Hai ({lena.length})
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                setActiveTab("dena")
+              }
+              style={{
+                border: "1px solid #dce4ee",
+                borderRadius: 7,
+                padding: "10px 15px",
+                background:
+                  activeTab === "dena"
+                    ? "#123a7c"
+                    : "#fff",
+                color:
+                  activeTab === "dena"
+                    ? "#fff"
+                    : "#52647a",
+                fontSize: 13,
+                fontWeight: 600,
+                fontFamily: "inherit",
+                cursor: "pointer",
+              }}
+            >
+              Dena Hai ({dena.length})
+            </button>
+
+          </div>
+
+          {/* SEARCH */}
+          <div className="clp-field">
+            <label>Search Agent</label>
+
+            <input
+              type="text"
+              placeholder="Search agent..."
+              value={search}
+              onChange={(event) =>
+                setSearch(event.target.value)
+              }
+            />
+          </div>
+
+        </div>
+
+        {/* ERROR */}
+        {error && (
+          <div className="clp-error">
+            {error}
+          </div>
+        )}
+
+        {/* TABLE */}
+        <div className="clp-table-wrap">
+          <table className="clp-table">
+
             <thead>
               <tr>
                 <th>AGENT</th>
-                <th className="final-amount">AMOUNT</th>
-                <th className="final-amount">SETTLED</th>
-                <th
-                  className="final-amount text-white bg-final bg-green"
-                  style={{ background: "green" }}
-                >
+
+                <th className="clp-number">
+                  AMOUNT
+                </th>
+
+                <th className="clp-number">
+                  SETTLED
+                </th>
+
+                <th className="clp-number">
                   FINAL
                 </th>
+
                 <th>ACTION</th>
               </tr>
             </thead>
+
             <tbody>
-              {lena.map((row) => (
+
+              {/* EMPTY STATE */}
+              {filteredRows.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="clp-empty"
+                  >
+                    {loading
+                      ? "Loading ledger..."
+                      : search
+                      ? "No matching agents found"
+                      : "No settlement records found"}
+                  </td>
+                </tr>
+              )}
+
+              {/* LEDGER ROWS */}
+              {filteredRows.map((row) => (
                 <tr key={row.ChildId}>
+
+                  {/* CHILD / AGENT LINK */}
                   <td>
-                    <CustomLink to={`/all-settlement/${row.ChildId}`}>
+                    <CustomLink
+                      to={`/all-settlement/${row.ChildId}`}
+                      className="cl-agent-link"
+                    >
                       {row.agent}
                     </CustomLink>
                   </td>
-                  <td>{row.amount.toFixed(2)}</td>
-                  <td>{row.settled.toFixed(2)}</td>
-                  <td className="bg-final text-white">
-                    {row.final.toFixed(2)}
+
+                  <td className="clp-number">
+                    {formatAmount(row.amount)}
                   </td>
+
+                  <td className="clp-number">
+                    {formatAmount(row.settled)}
+                  </td>
+
+                  <td className="clp-number">
+                    <span
+                      className={
+                        activeTab === "lena"
+                          ? "clp-credit"
+                          : "clp-debit"
+                      }
+                    >
+                      {formatAmount(row.final)}
+                    </span>
+                  </td>
+
                   <td>
                     <button
-                      className="btn btn-warning btn-sm"
-                      onClick={() => {
-                        setSelectedEntry(row);
-                        setInputAmount(0);
-                        setRemark("");
-                        setModalType("lena");
-                        setShowModal(true);
-                      }}
+                      type="button"
+                      className="cl-settle-btn"
+                      onClick={() =>
+                        openSettlement(
+                          row,
+                          activeTab
+                        )
+                      }
                     >
-                      <PaymentsIcon /> Settlement
+                      <PaymentsIcon fontSize="small" />
+                      Settlement
                     </button>
                   </td>
+
                 </tr>
               ))}
-              <tr className="font-weight-bold bg-light">
-                <td>LENA HAI</td>
-                <td>{lenaTotals.amount.toFixed(2)}</td>
-                <td>{lenaTotals.settled.toFixed(2)}</td>
-                <td className="bg-final text-white">
-                  {lenaTotals.final.toFixed(2)}
+
+              {/* TOTALS */}
+              <tr className="cl-total-row">
+
+                <td>
+                  {activeTab === "lena"
+                    ? "LENA HAI"
+                    : "DENA HAI"}
                 </td>
+
+                <td className="clp-number">
+                  {formatAmount(
+                    activeTotals.amount
+                  )}
+                </td>
+
+                <td className="clp-number">
+                  {formatAmount(
+                    activeTotals.settled
+                  )}
+                </td>
+
+                <td className="clp-number">
+                  {formatAmount(
+                    activeTotals.final
+                  )}
+                </td>
+
+                <td />
+
               </tr>
+
             </tbody>
           </table>
         </div>
 
-        <h3 className="mt-4">PAYMENT PAID TO (DENA HAI)</h3>
-        <div className="table-section overflow-auto">
-          <table className="ledger-table">
-            <thead>
-              <tr>
-                <th>AGENT</th>
-                <th className="final-amount">AMOUNT</th>
-                <th className="final-amount">SETTLED</th>
-                <th
-                  className="final-amount text-white bg-final"
-                  style={{ background: "#dc3545" }}
-                >
-                  FINAL
-                </th>
-                <th>ACTION</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dena.map((row) => (
-                <tr key={row.ChildId}>
-                  <td>
-                    <CustomLink to={`/all-settlement/${row.ChildId}`}>
-                      {row.agent}
-                    </CustomLink>
-                  </td>
-                  <td>{row.amount.toFixed(2)}</td>
-                  <td>{row.settled.toFixed(2)}</td>
-                  <td className="bg-final2 text-white">
-                    {row.final.toFixed(2)}
-                  </td>
-                  <td>
-                    <button
-                      className="btn btn-warning btn-sm"
-                      onClick={() => {
-                        setSelectedEntry(row);
-                        setInputAmount(0);
-                        setRemark("");
-                        setModalType("dena");
-                        setShowModal(true);
-                      }}
-                    >
-                      <PaymentsIcon /> Settlement
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              <tr className="font-weight-bold bg-light">
-                <td>DENA HAI</td>
-                <td>{denaTotals.amount.toFixed(2)}</td>
-                <td>{denaTotals.settled.toFixed(2)}</td>
-                <td className="bg-final2 text-white">
-                  {denaTotals.final.toFixed(2)}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        {/* FOOTER */}
+        <div className="clp-table-footer">
+
+          <span>
+            Showing {filteredRows.length} of{" "}
+            {activeRows.length} agents
+          </span>
+
+          <span>
+            {activeTab === "lena"
+              ? "Total Receiving"
+              : "Total Payable"}
+            : ₹{" "}
+            {formatAmount(activeTotals.final)}
+          </span>
+
         </div>
+      </div>
 
-        {/* SINGLE MODAL OUTSIDE LOOP */}
-        {showModal && selectedEntry && (
-          <div className="modal-overlay">
-            <div className="modal-content modal-fit-width p-3">
-              <h3 className="bg-gray-600 text-white mb-4">
-                Settle with: <strong>{selectedEntry.agent}</strong>
-              </h3>
+      {/* SETTLEMENT MODAL */}
+      {showModal &&
+        selectedEntry &&
+        createPortal(
+          <div
+            className="cl-modal-overlay"
+            onMouseDown={(event) => {
+              if (
+                event.target ===
+                event.currentTarget
+              ) {
+                closeSettlement();
+              }
+            }}
+          >
+            <div
+              className="cl-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="cl-modal-title"
+            >
 
-              <div className="form-group">
-                <label>Settle Amount (Fixed): {modalType}</label>
-                <input
-                  type="number"
-                  value={selectedEntry.final.toFixed(2)}
-                  readOnly
-                />
-              </div>
+              {/* MODAL HEADER */}
+              <div className="cl-modal-header">
 
-              <div className="form-group">
-                <label>
-                  Settlement Amount (Enter ≤ {selectedEntry.final.toFixed(2)}):
-                </label>
-                <input
-                  type="number"
-                  value={inputAmount}
-                  onChange={(e) =>
-                    setInputAmount(Math.abs(Number(e.target.value)))
-                  }
-                />
-              </div>
+                <div>
+                  <span className="cl-modal-kicker">
+                    Account Settlement
+                  </span>
 
-              <div className="form-group">
-                <label>Remark:</label>
-                <input
-                  type="text"
-                  value={remark}
-                  onChange={(e) => setRemark(e.target.value)}
-                />
-              </div>
+                  <h2 id="cl-modal-title">
+                    Settle with{" "}
+                    {selectedEntry.agent}
+                  </h2>
+                </div>
 
-              <div className="modal-actions">
                 <button
-                  className="btn btn-success"
-                  onClick={async () => {
-                    if (!selectedEntry || !modalType) return;
-
-                    if (
-                      inputAmount >
-                      Number(Math.abs(selectedEntry.final).toFixed(2))
-                    ) {
-                      alert("Settlement amount cannot exceed Settle Amount.");
-                      return;
-                    }
-
-                    const settleamount =
-                      modalType === "lena"
-                        ? -Math.abs(inputAmount)
-                        : Math.abs(inputAmount);
-
-                    const data: any = {
-                      ChildId: selectedEntry.ChildId,
-                      settleamount,
-                      remark,
-                      type: modalType,
-                    };
-
-                    try {
-                      await betService.postsettelement(data);
-                      setShowModal(false);
-                      // const res = await betService.oneledger();
-                      // const { lenaArray, denaArray } = processLedgerData(res.data.data);
-                      // setLena(lenaArray);
-                      // setDena(denaArray);
-                      window.location.reload();
-                    } catch (err) {
-                      alert("Error during settlement.");
-                      console.error(err);
-                    }
-                  }}
+                  type="button"
+                  className="cl-modal-close"
+                  onClick={closeSettlement}
+                  disabled={submitting}
+                  aria-label="Close"
                 >
-                  Submit
+                  ×
                 </button>
+
+              </div>
+
+              {/* MODAL BODY */}
+              <div className="cl-modal-body">
+
+                <div className="cl-modal-balance">
+
+                  <span>
+                    Settle Amount (Fixed):{" "}
+                    {modalType}
+                  </span>
+
+                  <strong>
+                    ₹{" "}
+                    {formatAmount(
+                      selectedEntry.final
+                    )}
+                  </strong>
+
+                </div>
+
+                {/* AMOUNT */}
+                <label className="cl-field">
+
+                  <span>
+                    Settlement Amount
+                  </span>
+
+                  <input
+                    type="number"
+                    value={inputAmount}
+                    onChange={(event) =>
+                      setInputAmount(
+                        Math.abs(
+                          Number(
+                            event.target.value
+                          )
+                        )
+                      )
+                    }
+                  />
+
+                  <small>
+                    Maximum ₹{" "}
+                    {formatAmount(
+                      Math.abs(
+                        selectedEntry.final
+                      )
+                    )}
+                  </small>
+
+                </label>
+
+                {/* REMARK */}
+                <label className="cl-field">
+
+                  <span>Remark</span>
+
+                  <input
+                    type="text"
+                    value={remark}
+                    onChange={(event) =>
+                      setRemark(
+                        event.target.value
+                      )
+                    }
+                  />
+
+                </label>
+
+              </div>
+
+              {/* MODAL FOOTER */}
+              <div className="cl-modal-footer">
+
                 <button
-                  className="btn btn-danger"
-                  onClick={() => setShowModal(false)}
+                  type="button"
+                  className="cl-cancel-btn"
+                  onClick={closeSettlement}
+                  disabled={submitting}
                 >
                   Close
                 </button>
+
+                <button
+                  type="button"
+                  className="cl-submit-btn"
+                  onClick={submitSettlement}
+                  disabled={submitting}
+                >
+                  {submitting
+                    ? "Processing..."
+                    : "Submit"}
+                </button>
+
               </div>
+
             </div>
-          </div>
+          </div>,
+          document.body
         )}
-      </div>
-    </>
+
+    </div>
   );
 };
 
 export default AllClientLedger;
-
-

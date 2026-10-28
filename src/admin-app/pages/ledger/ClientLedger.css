@@ -94,3 +94,757 @@
 .clp-table-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;color:#738398;font-size:12px;flex-wrap:wrap}
 .clp-more{padding:9px 15px}
 @media(max-width:640px){.client-ledger-page{padding:11px 8px}.clp-header h1{font-size:20px}.clp-header p{font-size:12px}.clp-summary{gap:9px}.clp-summary-card{padding:14px 12px}.clp-summary-card strong{font-size:19px}.clp-toolbar{padding:12px;gap:11px}.clp-field{flex-basis:100%}.clp-table th,.clp-table td{padding:11px 12px}.clp-table-footer{padding:12px}}
+
+/* All Client Ledger - Updated Navy UI */
+
+.cl-ledger-page {
+  --cl-primary: #123a7c;
+  --cl-border: #dce4ee;
+  --cl-ink: #26364b;
+
+  font-family: "Poppins", Arial, sans-serif !important;
+  background: #f6f8fc;
+  color: var(--cl-ink);
+  padding: 20px;
+  min-height: 100%;
+  font-size: 14px;
+}
+
+.cl-ledger-page * {
+  box-sizing: border-box;
+}
+
+/* Header */
+.cl-ledger-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.cl-eyebrow {
+  color: #6c809b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.cl-ledger-heading h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 4px 0;
+  color: #1b304d;
+}
+
+.cl-ledger-heading p {
+  font-size: 13px;
+  color: #718096;
+  margin: 0;
+}
+
+.cl-refresh-btn {
+  border: 0;
+  border-radius: 7px;
+  background: #123a7c;
+  color: #fff;
+  font: 600 13px "Poppins", Arial, sans-serif;
+  padding: 11px 18px;
+  cursor: pointer;
+}
+
+/* Summary */
+.cl-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.cl-summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 19px 20px;
+  background: #fff;
+  border: 1px solid var(--cl-border);
+  border-radius: 11px;
+  box-shadow: 0 4px 16px #152b4708;
+}
+
+.cl-summary-card span {
+  font-size: 13px;
+  color: #6f7e90;
+}
+
+.cl-summary-card strong {
+  font-size: 24px;
+  color: #123a7c;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.cl-summary-card small {
+  font-size: 12px;
+  color: #8996a7;
+}
+
+/* Sections */
+.cl-ledger-section {
+  background: #fff;
+  border: 1px solid var(--cl-border);
+  border-radius: 11px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px #152b4709;
+  margin-bottom: 20px;
+}
+
+.cl-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px;
+}
+
+.cl-section-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.cl-section-heading h2 {
+  font-size: 16px;
+  font-weight: 650;
+  margin: 0;
+  color: #1c2f4b;
+}
+
+.cl-section-mark {
+  width: 8px;
+  height: 24px;
+  border-radius: 5px;
+  background: #009e42;
+}
+
+.cl-section-mark.payable {
+  background: #e7a400;
+}
+
+.cl-count {
+  font-size: 12px;
+  background: #edf2fa;
+  color: #123a7c;
+  border-radius: 20px;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+
+/* Table */
+.cl-ledger-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cl-ledger-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 760px;
+  font-size: 13px;
+}
+
+.cl-ledger-table th {
+  background: #123a7c;
+  color: #fff;
+  text-align: left;
+  padding: 14px 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cl-ledger-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid #e9eef4;
+  vertical-align: middle;
+  color: #26364b;
+}
+
+.cl-ledger-table tbody tr:nth-child(even):not(.cl-total-row) {
+  background: #f8fafd;
+}
+
+.cl-ledger-table tbody tr:hover:not(.cl-total-row) {
+  background: #edf3fb;
+}
+
+.cl-ledger-table .cl-numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.cl-ledger-table .cl-final {
+  color: #123a7c;
+  font-weight: 700;
+}
+
+.cl-agent-link {
+  color: #123a7c !important;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cl-agent-link:hover {
+  text-decoration: underline;
+}
+
+/* Settlement Button */
+.cl-settle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  border-radius: 7px;
+  background: #123a7c;
+  color: #fff;
+  font: 600 13px "Poppins", Arial, sans-serif;
+  padding: 9px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cl-settle-btn:hover,
+.cl-refresh-btn:hover {
+  background: #0d2c61;
+}
+
+.cl-settle-btn svg {
+  font-size: 17px !important;
+}
+
+/* Totals */
+.cl-total-row td {
+  background: #eaf0f9 !important;
+  color: #123a7c !important;
+  font-weight: 700;
+  border-bottom: 0;
+}
+
+.cl-empty {
+  text-align: center;
+  padding: 28px !important;
+  color: #8a98a9 !important;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .cl-ledger-page {
+    padding: 11px 8px;
+  }
+
+  .cl-ledger-heading h1 {
+    font-size: 20px;
+  }
+
+  .cl-ledger-heading p {
+    font-size: 12px;
+  }
+
+  .cl-summary-grid {
+    gap: 9px;
+  }
+
+  .cl-summary-card {
+    padding: 14px 12px;
+  }
+
+  .cl-summary-card strong {
+    font-size: 19px;
+  }
+
+  .cl-section-heading {
+    padding: 13px 11px;
+  }
+
+  .cl-section-heading h2 {
+    font-size: 13px;
+  }
+
+  .cl-ledger-table th,
+  .cl-ledger-table td {
+    padding: 11px 12px;
+  }
+}
+
+
+
+/* Commission Len-Den - Navy Admin UI */
+
+.commission-page {
+  font-family: "Poppins", Arial, sans-serif;
+  background: #f6f8fc;
+  color: #26364b;
+  min-height: 100%;
+  padding: 20px;
+  font-size: 13px;
+}
+
+.commission-page *,
+.commission-modal-overlay * {
+  box-sizing: border-box;
+}
+
+.commission-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.commission-eyebrow {
+  color: #718096;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.commission-header h1 {
+  font-size: 23px;
+  font-weight: 700;
+  color: #1b304d;
+  margin: 4px 0;
+}
+
+.commission-header p {
+  font-size: 12px;
+  color: #718096;
+  margin: 0;
+}
+
+.commission-primary-btn,
+.commission-reset-btn,
+.commission-history-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  border-radius: 7px;
+  padding: 9px 13px;
+  font: 600 12px "Poppins", Arial, sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.commission-primary-btn {
+  background: #123a7c;
+  color: #fff;
+}
+
+.commission-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.commission-summary-card {
+  background: #fff;
+  border: 1px solid #dce4ee;
+  border-radius: 11px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.commission-summary-card span {
+  color: #6f7e90;
+  font-size: 13px;
+}
+
+.commission-summary-card strong {
+  font-size: 23px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.commission-summary-card small {
+  color: #8996a7;
+  font-size: 11px;
+}
+
+.commission-green {
+  color: #16834a !important;
+}
+
+.commission-red {
+  color: #d14949 !important;
+}
+
+.commission-strong {
+  font-weight: 700;
+}
+
+.commission-panel {
+  background: #fff;
+  border: 1px solid #dce4ee;
+  border-radius: 11px;
+  overflow: hidden;
+}
+
+.commission-toolbar {
+  padding: 18px;
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.commission-toolbar label {
+  display: flex;
+  flex: 1 1 160px;
+  flex-direction: column;
+  gap: 7px;
+  color: #52647a;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.commission-toolbar input,
+.commission-toolbar select,
+.commission-history-toolbar input {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #cad5e4;
+  background: #fff;
+  color: #26364b;
+  border-radius: 7px;
+  padding: 9px 11px;
+  font: 400 12px "Poppins", Arial, sans-serif;
+  outline: none;
+}
+
+.commission-search {
+  display: flex;
+  align-items: center;
+  border: 1px solid #cad5e4;
+  border-radius: 7px;
+  padding-left: 10px;
+  color: #8290a4;
+}
+
+.commission-search input {
+  border: 0;
+  height: 38px;
+}
+
+.commission-clear-btn {
+  border: 1px solid #cad5e4;
+  background: #f1f4f9;
+  color: #344256;
+  padding: 11px 15px;
+  border-radius: 7px;
+  font: 600 12px "Poppins", Arial, sans-serif;
+  cursor: pointer;
+}
+
+.commission-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.commission-new-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1000px;
+  font-size: 12px;
+}
+
+.commission-new-table th {
+  background: #123a7c;
+  color: #fff;
+  padding: 12px 13px;
+  text-align: left;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.commission-new-table td {
+  padding: 12px 13px;
+  border-bottom: 1px solid #e8edf4;
+  vertical-align: middle;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.commission-new-table tbody tr:nth-child(even) {
+  background: #f8fafd;
+}
+
+.commission-new-table tbody tr:hover {
+  background: #edf3fb;
+}
+
+.commission-user {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.commission-user strong {
+  color: #123a7c;
+  font-size: 13px;
+}
+
+.commission-user small {
+  color: #8290a4;
+  font-size: 11px;
+}
+
+.commission-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.commission-history-btn {
+  background: #eaf0fa;
+  color: #123a7c;
+}
+
+.commission-reset-btn {
+  background: #f4b942;
+  color: #382800;
+}
+
+.commission-total-row td {
+  background: #eaf0f9 !important;
+  color: #123a7c;
+  font-weight: 700;
+}
+
+.commission-empty {
+  text-align: center;
+  padding: 25px !important;
+  color: #8290a4;
+}
+
+.commission-footer {
+  padding: 14px 18px;
+  font-size: 12px;
+  color: #738398;
+}
+
+.commission-error {
+  color: #c0392b;
+  padding: 12px 18px;
+}
+
+/* Reset History Popup */
+
+.commission-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  background: rgba(10, 25, 48, 0.68);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.commission-history-modal {
+  width: min(1100px, 100%);
+  max-height: calc(100dvh - 32px);
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 70px #09192f55;
+  font-family: "Poppins", Arial, sans-serif;
+}
+
+.commission-modal-header {
+  background: #123a7c;
+  color: #fff;
+  padding: 18px 22px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.commission-modal-header span {
+  font-size: 10px;
+  color: #d3e2fa;
+  letter-spacing: 0.6px;
+}
+
+.commission-modal-header h2 {
+  font-size: 19px;
+  color: #fff;
+  margin: 5px 0;
+}
+
+.commission-modal-header p {
+  margin: 0;
+  color: #d3e2fa;
+  font-size: 12px;
+}
+
+.commission-modal-header button {
+  border: 0;
+  background: #ffffff25;
+  color: #fff;
+  border-radius: 6px;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+}
+
+.commission-modal-body {
+  padding: 18px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.commission-history-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.commission-history-summary > div {
+  background: #f4f7fc;
+  border: 1px solid #dce4ee;
+  padding: 15px;
+  border-radius: 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.commission-history-summary span {
+  color: #738398;
+  font-size: 12px;
+}
+
+.commission-history-summary strong {
+  font-size: 19px;
+  color: #123a7c;
+  overflow-wrap: anywhere;
+}
+
+.commission-history-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.commission-history-toolbar > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.commission-history-toolbar strong {
+  font-size: 14px;
+  color: #26364b;
+}
+
+.commission-history-toolbar small {
+  font-size: 11px;
+  color: #8290a4;
+}
+
+.commission-history-toolbar input {
+  max-width: 280px;
+}
+
+.commission-settled-badge {
+  display: inline-block;
+  background: #e2f6e9;
+  color: #16834a;
+  border-radius: 5px;
+  padding: 5px 9px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.commission-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 20px;
+  border-top: 1px solid #e8edf3;
+}
+
+.commission-modal-footer button {
+  background: #123a7c;
+  color: #fff;
+  border: 0;
+  border-radius: 7px;
+  padding: 10px 20px;
+  font: 600 12px "Poppins", Arial, sans-serif;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .commission-page {
+    padding: 11px 8px;
+  }
+
+  .commission-header h1 {
+    font-size: 19px;
+  }
+
+  .commission-summary {
+    gap: 9px;
+  }
+
+  .commission-summary-card {
+    padding: 13px 11px;
+  }
+
+  .commission-summary-card strong {
+    font-size: 17px;
+  }
+
+  .commission-toolbar {
+    padding: 12px;
+  }
+
+  .commission-toolbar label {
+    flex-basis: 100%;
+  }
+
+  .commission-history-summary {
+    gap: 7px;
+  }
+
+  .commission-history-summary > div {
+    padding: 10px;
+  }
+
+  .commission-history-summary strong {
+    font-size: 13px;
+  }
+
+  .commission-history-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .commission-history-toolbar input {
+    max-width: 100%;
+  }
+
+  .commission-modal-body {
+    padding: 12px;
+  }
+}
