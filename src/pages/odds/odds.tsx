@@ -164,30 +164,13 @@ const Odds = () => {
     if (currentMatch) {
     return (
       <div style={{ position: "relative", width: "100%" }}>
-        {/* Full Score Icon */}
-        <div
-          onClick={toggleFullScore}
-          style={{
-            position: "absolute",
-            top: "15px",
-            right: "8px",
-            zIndex: 10,
-            cursor: "pointer",
-            background: "#000",
-            color: "#fff",
-            padding: "6px 10px",
-            borderRadius: "4px",
-            fontSize: "12px"
-          }}
-        >
-          {isFullScore ? "Minimize" : "Full Score"}
-        </div>
+       
 
         <iframe
           style={{
             width: "100%",
             height: "auto",
-            minHeight: isFullScore ? "550px" : "269px",
+            // minHeight: isFullScore ? "550px" : "269px",
             transition: "min-height 0.3s ease"
           }}
           // src={`https://score.vkmster.com/scorecard?matchName=${currentMatch?.name}&date=${currentMatch?.matchDateTime}`}
